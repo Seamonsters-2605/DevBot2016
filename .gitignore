@@ -56,4 +56,8 @@ docs/_build/
 # PyBuilder
 target/
 
+# dev env settings
 .idea/
+
+# config file for deploy
+.deploy_cfg
