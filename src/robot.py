@@ -4,6 +4,7 @@ import wpilib
 
 from drive import Drive
 from CANTalonConfig import CANTalonConfig
+from smartjoystick import SmartJoystick
 
 
 class MyRobot( wpilib.IterativeRobot ):
@@ -30,13 +31,13 @@ class MyRobot( wpilib.IterativeRobot ):
 		self.Drive = Drive( self.M_FL, self.M_FR, self.M_RL, self.M_RR, self.VelocityConfig )
 		self.Drive.setMotorInversions( False, True, False, True )
 		self.Drive.setSensorInversions( False, True, False, True )
-		self.Drive.setMaxVelocity( 7000 )
+		self.Drive.setMaxVelocity( 3000 )
 
 
 
 		# Sticks
-		self.RightStick = wpilib.Joystick( 2 )
-		self.LeftStick = wpilib.Joystick( 1 )
+		self.RightStick = SmartJoystick( 1 , AxisDeadband=0.08 )
+		self.LeftStick = SmartJoystick( 0 , AxisDeadband=0.08 )
 
 	# Drive
 	# self.Drive = wpilib.RobotDrive( self.M_FL, self.M_RL, self.M_FR, self.M_RR )
@@ -50,10 +51,11 @@ class MyRobot( wpilib.IterativeRobot ):
 		pass
 
 	def teleopInit( self ):
-		pass
+		self.Drive.enable()
+		print("Enabled")
 
 	def teleopPeriodic( self ):
-		self.Drive.setTranslation( self.LeftStick.getX( ), self.LeftStick.getY( ) )
+		self.Drive.setTranslation( self.LeftStick.getX( ), self.LeftStick.getY( invert = True) )
 		self.Drive.setRotation( self.RightStick.getX( ) )
 		self.Drive.pushTransform( )
 
@@ -62,7 +64,8 @@ class MyRobot( wpilib.IterativeRobot ):
 
 	def testPeriodic( self ):
 		pass
-
+	def disabledInit(self):
+		self.Drive.disable()
 
 if __name__ == "__main__":
 	wpilib.run( MyRobot )

@@ -19,7 +19,8 @@ PI_Div_4 = 0.78539816339
 # put something in here free motors bla bla
 
 
-class Drive( MotorSafety ):
+#class Drive( MotorSafety ):
+class Drive( ):
 	class MotorPosition( Enum ):
 		kFrontLeft = 0
 
@@ -35,6 +36,8 @@ class Drive( MotorSafety ):
 			self.motorInverted = False
 
 			self.setPoint = 0.0
+		def motorI(self):
+			return -1 if self.motorInverted else 1
 
 	kDefaultExpirationTime = 0.1
 	kDefaultSensitivity = 0.5
@@ -55,7 +58,7 @@ class Drive( MotorSafety ):
 		self.MaxV = 1
 		self.prescaleR = 1
 		self.prescaleT = 1
-
+		self.sinInverted = False
 		if len( args ) == 5:
 			self.test = wpilib.CANTalon( 1 )
 			self.FLMotor = args[0]
@@ -77,8 +80,8 @@ class Drive( MotorSafety ):
 		self.sensitivity = Drive.kDefaultSensitivity
 
 		# set up motor safety
-		self.setExpiration( self.kDefaultExpirationTime )
-		self.setSafetyEnabled( True )
+		#self.setExpiration( self.kDefaultExpirationTime )
+		#self.setSafetyEnabled( True )
 
 	def setTalonConfig( self, CANTalonConfig ):
 		self.CANTalonConfig = CANTalonConfig
@@ -151,6 +154,7 @@ class Drive( MotorSafety ):
 		LX = self.TX
 		LY = self.TY
 		LR = self.TR
+		print( "TX: " + str(LX) + "    TY: " + str(LY))
 		# implement xy filters here?
 
 		# implement rotation filters here
@@ -169,15 +173,14 @@ class Drive( MotorSafety ):
 		if self.enabled:
 			Speeds = [0] * 4
 
-			Speeds[0] = ((sinCalc if self.MInfoFL.motorInverted else cosCalc) + LR)
-			Speeds[1] = ((sinCalc if self.MInfoFR.motorInverted else cosCalc) - LR)
-			Speeds[2] = ((sinCalc if self.MInfoRL.motorInverted else cosCalc) + LR)
-			Speeds[3] = ((sinCalc if self.MInfoRR.motorInverted else cosCalc) - LR)
+			Speeds[0] = ((cosCalc if self.sinInverted else sinCalc) + LR) * self.MInfoFL.motorI()
+			Speeds[1] = ((sinCalc if self.sinInverted else cosCalc) - LR) * self.MInfoFR.motorI()
+			Speeds[2] = ((sinCalc if self.sinInverted else cosCalc) + LR) * self.MInfoRL.motorI()
+			Speeds[3] = ((cosCalc if self.sinInverted else sinCalc) - LR) * self.MInfoRR.motorI()
 
 			wpilib.RobotDrive.normalize( Speeds )
 
 			self.ScaleSpeeds( Speeds )
-
 			self.MInfoFL.setPoint = Speeds[0]
 			self.FLMotor.set( Speeds[0] )
 			self.MInfoFR.setPoint = Speeds[1]
@@ -188,7 +191,7 @@ class Drive( MotorSafety ):
 			self.RRMotor.set( Speeds[3] )
 
 	def setMaxVelocity( self, max ):
-		self.MaxV = max
+		self.MaxV = max * 1.0
 
 	def getMotorScale( self ):
 		return self.Scale
@@ -197,6 +200,8 @@ class Drive( MotorSafety ):
 		self.prescaleR = Rotation
 		self.prescaleT = Translation
 
+	def setSinInverted(self, inverted):
+		self.sinInverted = inverted
 	def getPreScaleT( self ):
 		return self.prescaleT
 
@@ -210,7 +215,26 @@ class Drive( MotorSafety ):
 	def setRotation( self, R ):
 		self.TR = R * self.prescaleR
 
-	@staticmethod
 	def ScaleSpeeds( self, WheelSpeeds ):
 		for i in range( len( WheelSpeeds ) ):
-			WheelSpeeds[i] *= self.MaxV6
+			WheelSpeeds[i] *= self.MaxV
+
+	def getDescription( self ):
+		return "Robot Drive"
+
+	def stopMotor( self ):
+
+		if self.FLMotor is not None:
+			self.FLMotor.set( 0.0 )
+		if self.FRMotor is not None:
+			self.FRMotor.set( 0.0 )
+		if self.RLMotor is not None:
+			self.RLMotor.set( 0.0 )
+		if self.RRMotor is not None:
+			self.RRMotor.set( 0.0 )
+		#self.feed( )
+
+
+	def getNumMotors( self ):
+		return 4
+
