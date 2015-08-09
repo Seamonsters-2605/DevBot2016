@@ -59,8 +59,8 @@ class Drive( ):
 		self.prescaleR = 1
 		self.prescaleT = 1
 		self.sinInverted = False
+
 		if len( args ) == 5:
-			self.test = wpilib.CANTalon( 1 )
 			self.FLMotor = args[0]
 			self.FRMotor = args[1]
 			self.RLMotor = args[2]
@@ -150,16 +150,14 @@ class Drive( ):
 		return self.enabled
 
 	def pushTransform( self ):
-		forceAngle = 0
 		LX = self.TX
 		LY = self.TY
 		LR = self.TR
-		print( "TX: " + str(LX) + "    TY: " + str(LY))
 		# implement xy filters here?
 
 		# implement rotation filters here
 
-		forceMag = math.sqrt( LX * LX + LY * LY )
+		forceMag = math.sqrt( (LX * LX) + (LY * LY) )
 
 		ForceAngle = math.atan2( LX, LY )
 
@@ -167,8 +165,8 @@ class Drive( ):
 
 		# implement mag direction filterrrss
 
-		sinCalc = math.sin( forceAngle ) * forceMag
-		cosCalc = math.cos( forceAngle ) * forceMag
+		sinCalc = math.sin( ForceAngle ) * forceMag
+		cosCalc = math.cos( ForceAngle ) * forceMag
 
 		if self.enabled:
 			Speeds = [0] * 4
@@ -180,7 +178,9 @@ class Drive( ):
 
 			wpilib.RobotDrive.normalize( Speeds )
 
+
 			self.ScaleSpeeds( Speeds )
+
 			self.MInfoFL.setPoint = Speeds[0]
 			self.FLMotor.set( Speeds[0] )
 			self.MInfoFR.setPoint = Speeds[1]

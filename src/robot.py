@@ -36,8 +36,8 @@ class MyRobot( wpilib.IterativeRobot ):
 
 
 		# Sticks
-		self.RightStick = SmartJoystick( 1 , AxisDeadband=0.08 )
-		self.LeftStick = SmartJoystick( 0 , AxisDeadband=0.08 )
+		self.RightStick = SmartJoystick( 1 , AxisDeadband=0.08)
+		self.LeftStick = SmartJoystick( 0  , AxisDeadband=0.08)
 
 	# Drive
 	# self.Drive = wpilib.RobotDrive( self.M_FL, self.M_RL, self.M_FR, self.M_RR )
@@ -55,7 +55,7 @@ class MyRobot( wpilib.IterativeRobot ):
 		print("Enabled")
 
 	def teleopPeriodic( self ):
-		self.Drive.setTranslation( self.LeftStick.getX( ), self.LeftStick.getY( invert = True) )
+		self.Drive.setTranslation( self.LeftStick.getX( ), self.LeftStick.getY( ))
 		self.Drive.setRotation( self.RightStick.getX( ) )
 		self.Drive.pushTransform( )
 
