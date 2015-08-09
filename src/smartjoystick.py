@@ -21,18 +21,7 @@ class SmartJoystick(wpilib.Joystick):
 		return self.checkDeadband(self.getRawAxis(self.axes[self.AxisType.kY])) * (-1.0 if inv else 1.0)
 
 	def getX(self, hand=None, inv=False):
-		"""Get the X value of the joystick.
-
-		This depends on the mapping of the joystick connected to the current
-		port.
-
-		:param hand: Unused
-		:returns: The X value of the joystick.
-		:rtype: float
-		"""
-		x = self.checkDeadband(self.getRawAxis(self.axes[self.AxisType.kX])) * (-1.0 if inv else 1.0)
-		print("X: " + str(x))
-		return x
+		return self.checkDeadband(self.getRawAxis(self.axes[self.AxisType.kX])) * (-1.0 if inv else 1.0)
 
 	def getZ(self, hand=None, inv = False):
 		return self.checkDeadband(self.getRawAxis(self.axes[self.AxisType.kZ])) * (-1.0 if inv else 1.0)
