@@ -3,7 +3,7 @@ __author__ = 'Ian'
 import wpilib
 
 from drive import Drive
-from CANTalonConfig import CANTalonConfig
+from cantalonconfig import CANTalonConfig
 from smartjoystick import SmartJoystick
 
 
@@ -12,10 +12,10 @@ class MyRobot( wpilib.IterativeRobot ):
 		# Motor Config
 		self.VelocityConfig = CANTalonConfig( wpilib.CANTalon.ControlMode.Speed,
 											  wpilib.CANTalon.FeedbackDevice.QuadEncoder )
-		self.VelocityConfig.SetPIDF( 0.5, 0.0, 2.0, 0.0 );
-		self.VelocityConfig.SetControlSlot( 0 );
-		self.VelocityConfig.SetRampRates( 25.0, 0.0 );
-		self.VelocityConfig.SetBrake( True );
+		self.VelocityConfig.setPIDF( 0.5, 0.0, 2.0, 0.0 );
+		self.VelocityConfig.setControlSlot( 0 );
+		self.VelocityConfig.setRampRates( 25.0, 0.0 );
+		self.VelocityConfig.setBraking( True );
 		# self.VelocityConfig
 		# Motor Declared
 		self.M_FL = wpilib.CANTalon( 51 )
