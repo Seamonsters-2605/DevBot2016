@@ -17,7 +17,7 @@ class CANTalonConfig:
 		self.motorRamp = 0
 		self.brake = False
 
-	def SetGlobalInversion( self, Sensor ):
+	def setGlobalInversion( self, Sensor ):
 		self.sensorInvertedGlobal = Sensor
 
 	def setPIDF( self, P, I, D, F ):
