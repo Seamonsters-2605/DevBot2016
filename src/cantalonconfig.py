@@ -2,6 +2,7 @@ __author__ = 'Ian'
 
 __all__ = ["CANTalonConfig"]
 
+
 class CANTalonConfig:
 	def __init__( self, controlmode, feedbacktype=None ):
 		self.Mode = controlmode
@@ -37,14 +38,14 @@ class CANTalonConfig:
 		self.motorRamp = motor
 		self.closedLoopRamp = closedloop
 
-	def setControlSlot( self, slot=None):
+	def setControlSlot( self, slot=None ):
 		if (slot > 1) or (slot < -1):
 			slot = -1
 		self.controlSlot = slot
 
-	def isCANTalon(self, CANTalon):
-		if hasattr(CANTalon, "getDescription"):
-			desc = CANTalon.getDescription()
+	def isCANTalon( self, CANTalon ):
+		if hasattr( CANTalon, "getDescription" ):
+			desc = CANTalon.getDescription( )
 			if "CANTalon" in desc:
 				return True
 			else:
@@ -52,10 +53,9 @@ class CANTalonConfig:
 		else:
 			return False
 
-
 	def configure( self, CANTalon ):
-		if not self.isCANTalon(CANTalon):
-			raise ValueError("did not pass a object of type CANTalon")
+		if not self.isCANTalon( CANTalon ):
+			raise ValueError( "did not pass a object of type CANTalon" )
 		CANTalon.changeControlMode( self.Mode )
 
 		if self.feedbackType != None:
