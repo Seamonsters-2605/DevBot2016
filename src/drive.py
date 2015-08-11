@@ -108,10 +108,10 @@ class Drive( ):
 		self.enabledMotorFix( )
 
 	def configMotors( self ):
-		self.CANTalonConfig.Configure( self.FLMotor )
-		self.CANTalonConfig.Configure( self.FRMotor )
-		self.CANTalonConfig.Configure( self.RLMotor )
-		self.CANTalonConfig.Configure( self.RRMotor )
+		self.CANTalonConfig.configure( self.FLMotor )
+		self.CANTalonConfig.configure( self.FRMotor )
+		self.CANTalonConfig.configure( self.RLMotor )
+		self.CANTalonConfig.configure( self.RRMotor )
 
 	def configSensorI( self ):
 		self.FLMotor.reverseSensor( self.MInfoFL.sensorInverted )

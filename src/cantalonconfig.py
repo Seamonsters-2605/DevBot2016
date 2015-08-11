@@ -2,6 +2,7 @@ __author__ = 'Ian'
 
 __all__ = ["CANTalonConfig"]
 
+
 class CANTalonConfig:
 	def __init__( self, controlmode, feedbacktype=None ):
 		self.Mode = controlmode
@@ -13,11 +14,11 @@ class CANTalonConfig:
 		self.F = 0
 		self.IZone = 0
 		self.sensorInvertedGlobal = False
-		self.closedloopRamp = 0
+		self.closedLoopRamp = 0
 		self.motorRamp = 0
 		self.brake = False
 
-	def SetGlobalInversion( self, Sensor ):
+	def setGlobalInversion( self, Sensor ):
 		self.sensorInvertedGlobal = Sensor
 
 	def setPIDF( self, P, I, D, F ):
@@ -29,19 +30,32 @@ class CANTalonConfig:
 	def setIZone( self, izone ):
 		self.IZone = izone
 
-	def setBraking( self, brake ):
+	def setBraking( self, brake=False ):
+
 		self.brake = brake
 
 	def setRampRates( self, motor, closedloop ):
 		self.motorRamp = motor
-		self.closedloopRamp = closedloop
+		self.closedLoopRamp = closedloop
 
-	def setControlSlot( self, slot=None):
+	def setControlSlot( self, slot=None ):
 		if (slot > 1) or (slot < -1):
 			slot = -1
 		self.controlSlot = slot
 
+	def isCANTalon( self, CANTalon ):
+		if hasattr( CANTalon, "getDescription" ):
+			desc = CANTalon.getDescription( )
+			if "CANTalon" in desc:
+				return True
+			else:
+				return False
+		else:
+			return False
+
 	def configure( self, CANTalon ):
+		if not self.isCANTalon( CANTalon ):
+			raise ValueError( "did not pass a object of type CANTalon" )
 		CANTalon.changeControlMode( self.Mode )
 
 		if self.feedbackType != None:
