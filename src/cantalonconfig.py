@@ -42,7 +42,20 @@ class CANTalonConfig:
 			slot = -1
 		self.controlSlot = slot
 
+	def isCANTalon(self, CANTalon):
+		if hasattr(CANTalon, "getDescription"):
+			desc = CANTalon.getDescription()
+			if "CANTalon" in desc:
+				return True
+			else:
+				return False
+		else:
+			return False
+
+
 	def configure( self, CANTalon ):
+		if not self.isCANTalon(CANTalon):
+			raise ValueError("did not pass a object of type CANTalon")
 		CANTalon.changeControlMode( self.Mode )
 
 		if self.feedbackType != None:
