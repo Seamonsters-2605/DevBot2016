@@ -29,7 +29,8 @@ class CANTalonConfig:
 	def setIZone( self, izone ):
 		self.IZone = izone
 
-	def setBraking( self, brake ):
+	def setBraking( self, brake=False ):
+
 		self.brake = brake
 
 	def setRampRates( self, motor, closedloop ):

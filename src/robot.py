@@ -12,10 +12,10 @@ class MyRobot( wpilib.IterativeRobot ):
 		# Motor Config
 		self.VelocityConfig = CANTalonConfig( wpilib.CANTalon.ControlMode.Speed,
 											  wpilib.CANTalon.FeedbackDevice.QuadEncoder )
-		self.VelocityConfig.setPIDF( 0.5, 0.0, 2.0, 0.0 );
-		self.VelocityConfig.setControlSlot( 0 );
-		self.VelocityConfig.setRampRates( 25.0, 0.0 );
-		self.VelocityConfig.setBraking( True );
+		self.VelocityConfig.setPIDF( 0.5, 0.0, 2.0, 0.0 )
+		self.VelocityConfig.setControlSlot( 0 )
+		self.VelocityConfig.setRampRates( 25.0, 0.0 )
+		self.VelocityConfig.setBraking( True )
 		# self.VelocityConfig
 		# Motor Declared
 		self.M_FL = wpilib.CANTalon( 51 )
