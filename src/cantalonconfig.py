@@ -13,7 +13,7 @@ class CANTalonConfig:
 		self.F = 0
 		self.IZone = 0
 		self.sensorInvertedGlobal = False
-		self.closedloopRamp = 0
+		self.closedLoopRamp = 0
 		self.motorRamp = 0
 		self.brake = False
 
@@ -34,7 +34,7 @@ class CANTalonConfig:
 
 	def setRampRates( self, motor, closedloop ):
 		self.motorRamp = motor
-		self.closedloopRamp = closedloop
+		self.closedLoopRamp = closedloop
 
 	def setControlSlot( self, slot=None):
 		if (slot > 1) or (slot < -1):
