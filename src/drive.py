@@ -1,14 +1,9 @@
 __author__ = 'Ian'
 
-import hal
-import warnings
 import math
-import weakref
 import wpilib
 
 from wpilib.motorsafety import MotorSafety
-from wpilib.talon import Talon
-from wpilib.canjaguar import CANJaguar
 from enum import Enum
 
 __all__ = ["Drive"]
