@@ -50,13 +50,15 @@ class Drive( ):
 
 
 		self.enabled = False
-		self.powerscale = 1.0
+
 		self.TX = 0.0
 		self.TY = 0.0
 		self.TR = 0.0
 		self.MaxV = 1
+
 		self.prescaleR = 1
 		self.prescaleT = 1
+
 		self.sinInverted = False
 
 		self.MInfoFL = self.MotorInfo( )
@@ -85,11 +87,6 @@ class Drive( ):
 		self.MInfoRL.sensorInverted = RL
 		self.MInfoRR.sensorInverted = RR
 
-	def setPowerscale( self, powerscale ):
-		self.powerscale = powerscale
-
-		self.enabledMotorFix( )
-
 	def configMotors( self ):
 		self.CANTalonConfig.configure( self.FLMotor )
 		self.CANTalonConfig.configure( self.FRMotor )
@@ -105,13 +102,13 @@ class Drive( ):
 	def enabledMotorFix( self ):
 		if self.enabled:
 			self.FLMotor.set(
-				self.MInfoFL.setPoint * (-self.powerscale if self.MInfoFL.motorInverted else self.powerscale) )
+				self.MInfoFL.setPoint * (-1 if self.MInfoFL.motorInverted else 1) )
 			self.FRMotor.set(
-				self.MInfoFR.setPoint * (-self.powerscale if self.MInfoFR.motorInverted else self.powerscale) )
+				self.MInfoFR.setPoint * (-1 if self.MInfoFR.motorInverted else 1) )
 			self.RLMotor.set(
-				self.MInfoRL.setPoint * (-self.powerscale if self.MInfoRL.motorInverted else self.powerscale) )
+				self.MInfoRL.setPoint * (-1 if self.MInfoRL.motorInverted else 1) )
 			self.RRMotor.set(
-				self.MInfoRR.setPoint * (-self.powerscale if self.MInfoRR.motorInverted else self.powerscale) )
+				self.MInfoRR.setPoint * (-1 if self.MInfoRR.motorInverted else 1) )
 
 	def enable( self ):
 		self.enabled = True
