@@ -5,7 +5,7 @@ import wpilib
 from drive import Drive
 from cantalonconfig import CANTalonConfig
 from smartjoystick import SmartJoystick
-
+from filters import *
 
 class MyRobot( wpilib.IterativeRobot ):
 	def robotInit( self ):
@@ -23,6 +23,8 @@ class MyRobot( wpilib.IterativeRobot ):
 		self.M_RL = wpilib.CANTalon( 53 )
 		self.M_RR = wpilib.CANTalon( 54 )
 
+		self.vProfile = MecanumVelocityProfile(2)
+		self.strafeTVP = MecanumXYTVPFilter(4)
 		# self.M_FR.reverseSensor(False)
 		# self.M_RR.reverseSensor(False)
 
@@ -32,7 +34,9 @@ class MyRobot( wpilib.IterativeRobot ):
 		self.Drive.setMotorInversions( False, True, False, True )
 		self.Drive.setSensorInversions( False, True, False, True )
 		self.Drive.setMaxVelocity( 3000 )
-
+		self.Drive.addMDFilter(self.vProfile)
+		self.Drive.addXYFilter(self.strafeTVP)
+		self.Drive.removeXYFilter(self.strafeTVP)
 
 
 		# Sticks
