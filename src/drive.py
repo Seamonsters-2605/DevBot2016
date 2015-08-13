@@ -87,6 +87,8 @@ class Drive( ):
 		self.MInfoRL.sensorInverted = RL
 		self.MInfoRR.sensorInverted = RR
 
+		self.enabledMotorFix( )
+
 	def configMotors( self ):
 		self.CANTalonConfig.configure( self.FLMotor )
 		self.CANTalonConfig.configure( self.FRMotor )
@@ -101,6 +103,9 @@ class Drive( ):
 
 	def enabledMotorFix( self ):
 		if self.enabled:
+
+			self.configSensorI()
+
 			self.FLMotor.set(
 				self.MInfoFL.setPoint * (-1 if self.MInfoFL.motorInverted else 1) )
 			self.FRMotor.set(
