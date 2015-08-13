@@ -8,7 +8,7 @@ from enum import Enum
 
 __all__ = ["Drive"]
 
-PI_Div_4 = 0.78539816339
+PI_DIV_4 = math.pi / 4.0
 
 
 # put something in here free motors bla bla
@@ -35,8 +35,6 @@ class Drive( ):
 	kDefaultExpirationTime = 0.1
 	kDefaultSensitivity = 0.5
 	kDefaultMaxOutput = 1.0
-
-	PI_Div_4 = 0.78539816339
 
 	def __init__( self, FL , FR , RL  , RR  , config):
 
@@ -146,7 +144,7 @@ class Drive( ):
 
 		ForceAngle = math.atan2( LX, LY )
 
-		ForceAngle += PI_Div_4
+		ForceAngle += PI_DIV_4
 
 		# implement mag direction filterrrss
 
