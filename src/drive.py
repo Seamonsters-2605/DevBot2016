@@ -150,7 +150,7 @@ class Drive( ):
 			wpilib.RobotDrive.normalize( Speeds )
 
 
-			self.ScaleSpeeds( Speeds )
+			self.scaleSpeeds( Speeds )
 
 			self.MInfoFL.setPoint = Speeds[0]
 			self.FLMotor.set( Speeds[0] )
@@ -192,7 +192,7 @@ class Drive( ):
 			self.RRMotor.set( 0.0 )
 		#self.feed( )
 
-	def ScaleSpeeds( self, WheelSpeeds ):
+	def scaleSpeeds( self, WheelSpeeds ):
 		for i in range( len( WheelSpeeds ) ):
 			WheelSpeeds[i] *= self.MaxV
 
