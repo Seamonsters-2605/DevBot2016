@@ -67,7 +67,7 @@ class Drive( ):
 		self.MInfoRR = self.MotorInfo( )
 	#Set Functions
 	def setTalonConfig( self, CANTalonConfig ):
-		self.CANTalonConfig = CANTalonConfig
+		self.config = CANTalonConfig
 
 		self.configMotors( )
 
@@ -197,10 +197,10 @@ class Drive( ):
 			WheelSpeeds[i] *= self.MaxV
 
 	def configMotors( self ):
-		self.CANTalonConfig.configure( self.FLMotor )
-		self.CANTalonConfig.configure( self.FRMotor )
-		self.CANTalonConfig.configure( self.RLMotor )
-		self.CANTalonConfig.configure( self.RRMotor )
+		self.config.configure( self.FLMotor )
+		self.config.configure( self.FRMotor )
+		self.config.configure( self.RLMotor )
+		self.config.configure( self.RRMotor )
 
 	def configSensorI( self ):
 		self.FLMotor.reverseSensor( self.MInfoFL.sensorInverted )
