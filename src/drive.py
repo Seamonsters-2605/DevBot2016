@@ -14,15 +14,12 @@ PI_Div_4 = 0.78539816339
 # put something in here free motors bla bla
 
 
-#class Drive( MotorSafety ):
 class Drive( ):
+
 	class MotorPosition( Enum ):
 		kFrontLeft = 0
-
 		kFrontRight = 1
-
 		kRearLeft = 2
-
 		kRearRight = 3
 
 	class MotorInfo:
@@ -31,14 +28,13 @@ class Drive( ):
 			self.motorInverted = False
 
 			self.setPoint = 0.0
+
 		def motorI(self):
 			return -1 if self.motorInverted else 1
 
 	kDefaultExpirationTime = 0.1
 	kDefaultSensitivity = 0.5
 	kDefaultMaxOutput = 1.0
-
-	# kMecanum_Reported = False
 
 	PI_Div_4 = 0.78539816339
 
@@ -70,13 +66,6 @@ class Drive( ):
 		self.MInfoRR = self.MotorInfo( )
 
 		self.configMotors( )
-		# other defaults
-		self.maxOutput = Drive.kDefaultMaxOutput
-		self.sensitivity = Drive.kDefaultSensitivity
-
-		# set up motor safety
-		#self.setExpiration( self.kDefaultExpirationTime )
-		#self.setSafetyEnabled( True )
 
 	def setTalonConfig( self, CANTalonConfig ):
 		self.CANTalonConfig = CANTalonConfig
