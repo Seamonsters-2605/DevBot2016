@@ -38,6 +38,8 @@ class Drive( ):
 	kDefaultSensitivity = 0.5
 	kDefaultMaxOutput = 1.0
 
+	acceptedFilterTypes = ["1_1","2_2"]
+
 	def __init__( self, FL , FR , RL  , RR  , config):
 
 		super( ).__init__( )
@@ -65,6 +67,11 @@ class Drive( ):
 		self.MInfoFR = self.MotorInfo( )
 		self.MInfoRL = self.MotorInfo( )
 		self.MInfoRR = self.MotorInfo( )
+
+		self.XYFilter = None
+		self.RFilter = None
+		self.MDFilter = None
+
 	#Set Functions
 	def setTalonConfig( self, CANTalonConfig ):
 		self.config = CANTalonConfig
@@ -125,19 +132,32 @@ class Drive( ):
 		LY = self.TY
 		LR = self.TR
 		# implement xy filters here?
-
+		if self.XYFilter != None:
+			for filter in self.XYFilter:
+				filter.compute(LX , LY)
+				LX = filter.readA()
+				LY = filter.readB()
 		# implement rotation filters here
+		if self.RFilter != None:
+			for filter in self.RFilter:
+				filter.compute(LR)
+				LR = filter.readA()
 
 		forceMag = math.sqrt( (LX * LX) + (LY * LY) )
 
-		ForceAngle = math.atan2( LX, LY )
+		forceAngle = math.atan2( LX, LY )
 
-		ForceAngle += self.PI_DIV_4
+		forceAngle += self.PI_DIV_4
 
-		# implement mag direction filterrrss
+		# implement mag direction filter
+		if self.MDFilter != None:
+			for filter in self.MDFilter:
+				filter.compute(forceMag , forceAngle)
+				forceMag = filter.readA()
+				forceAngle = filter.readB()
 
-		sinCalc = math.sin( ForceAngle ) * forceMag
-		cosCalc = math.cos( ForceAngle ) * forceMag
+		sinCalc = math.sin( forceAngle ) * forceMag
+		cosCalc = math.cos( forceAngle ) * forceMag
 
 		if self.enabled:
 			Speeds = [0] * 4
@@ -165,7 +185,7 @@ class Drive( ):
 		return self.enabled
 
 	def getMotorScale( self ):
-		return self.Scale
+		return self.MaxV
 
 
 	def getPreScaleT( self ):
@@ -221,3 +241,51 @@ class Drive( ):
 				self.MInfoRL.setPoint * (-1 if self.MInfoRL.motorInverted else 1) )
 			self.RRMotor.set(
 				self.MInfoRR.setPoint * (-1 if self.MInfoRR.motorInverted else 1) )
+
+	def checkFilterType(self, filter):
+		if hasattr( filter, "getType" ):
+			if filter.getType() not in self.acceptedFilterTypes:
+				raise ValueError("That is not a valid type of filter")
+			return filter.getType()
+		else:
+			raise ValueError("did not pass in a valid filter")
+
+	def addXYFilter(self, filter):
+		if filter != None and self.checkFilterType(filter) == "2_2":
+			if  self.XYFilter == None:
+				self.XYFilter = []
+			self.XYFilter.append(filter)
+	def removeXYFilter(self, filter):
+		#note this only gets the first index of that filter, same for all of the remove functions
+		if filter != None and self.checkFilterType(filter) == "2_2":
+			ind = self.XYFilter.index(filter)
+			if ind != -1:
+				self.XYFilter.pop(ind)
+				if len(self.XYFilter) == 0:#serperate this out into its own function at some point..
+					self.XYFilter = None
+
+	def addRFilter(self, filter):
+		if filter != None and self.checkFilterType(filter) == "1_1":
+			if self.RFilter == None:
+				self.RFilter = []
+			self.RFilter.append(filter)
+	def removeRFilter(self, filter):
+		if filter != None and self.checkFilterType(filter) == "1_1":
+			ind = self.RFilter.index(filter)
+			if ind != -1:
+				self.RFilter.pop(ind)
+				if len(self.RFilter) == 0:
+					self.RFilter = None
+
+	def addMDFilter(self,filter):
+		if filter != None and self.checkFilterType(filter) == "2_2":
+			if self.MDFilter == None:
+				self.MDFilter = []
+			self.MDFilter.append(filter)
+	def removeMDFilter(self, filter):
+		if filter != None and self.checkFilterType(filter) == "2_2":
+			ind = self.MDFilter.index(filter)
+			if ind != -1:
+				self.MDFilter.pop(ind)
+				if len(self.MDFilter) == 0:
+					self.MDFilter = None
