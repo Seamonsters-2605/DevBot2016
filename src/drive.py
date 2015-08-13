@@ -64,8 +64,6 @@ class Drive( ):
 		self.MInfoRL = self.MotorInfo( )
 		self.MInfoRR = self.MotorInfo( )
 
-		self.configMotors( )
-
 	def setTalonConfig( self, CANTalonConfig ):
 		self.CANTalonConfig = CANTalonConfig
 
