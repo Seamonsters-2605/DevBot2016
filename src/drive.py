@@ -8,7 +8,7 @@ from enum import Enum
 
 __all__ = ["Drive"]
 
-PI_DIV_4 = math.pi / 4.0
+
 
 
 # put something in here free motors bla bla
@@ -16,6 +16,8 @@ PI_DIV_4 = math.pi / 4.0
 
 class Drive( ):
 
+	PI_DIV_4 = math.pi / 4.0
+	
 	class MotorPosition( Enum ):
 		kFrontLeft = 0
 		kFrontRight = 1
