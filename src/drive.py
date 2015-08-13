@@ -17,7 +17,7 @@ __all__ = ["Drive"]
 class Drive( ):
 
 	PI_DIV_4 = math.pi / 4.0
-	
+
 	class MotorPosition( Enum ):
 		kFrontLeft = 0
 		kFrontRight = 1
@@ -65,7 +65,7 @@ class Drive( ):
 		self.MInfoFR = self.MotorInfo( )
 		self.MInfoRL = self.MotorInfo( )
 		self.MInfoRR = self.MotorInfo( )
-
+	#Set Functions
 	def setTalonConfig( self, CANTalonConfig ):
 		self.CANTalonConfig = CANTalonConfig
 
@@ -87,32 +87,16 @@ class Drive( ):
 
 		self.enabledMotorFix( )
 
-	def configMotors( self ):
-		self.CANTalonConfig.configure( self.FLMotor )
-		self.CANTalonConfig.configure( self.FRMotor )
-		self.CANTalonConfig.configure( self.RLMotor )
-		self.CANTalonConfig.configure( self.RRMotor )
+	def setMaxVelocity( self, max ):
+		self.MaxV = max * 1.0
 
-	def configSensorI( self ):
-		self.FLMotor.reverseSensor( self.MInfoFL.sensorInverted )
-		self.FRMotor.reverseSensor( self.MInfoFR.sensorInverted )
-		self.RLMotor.reverseSensor( self.MInfoRL.sensorInverted )
-		self.RRMotor.reverseSensor( self.MInfoRR.sensorInverted )
+	def setPreScale( self, Translation, Rotation ):
+		self.prescaleR = Rotation
+		self.prescaleT = Translation
 
-	def enabledMotorFix( self ):
-		if self.enabled:
-
-			self.configSensorI()
-
-			self.FLMotor.set(
-				self.MInfoFL.setPoint * (-1 if self.MInfoFL.motorInverted else 1) )
-			self.FRMotor.set(
-				self.MInfoFR.setPoint * (-1 if self.MInfoFR.motorInverted else 1) )
-			self.RLMotor.set(
-				self.MInfoRL.setPoint * (-1 if self.MInfoRL.motorInverted else 1) )
-			self.RRMotor.set(
-				self.MInfoRR.setPoint * (-1 if self.MInfoRR.motorInverted else 1) )
-
+	def setSinInverted(self, inverted):
+		self.sinInverted = inverted
+	#Enable And Disable
 	def enable( self ):
 		self.enabled = True
 		self.configMotors( )
@@ -128,9 +112,13 @@ class Drive( ):
 		self.RLMotor.set( 0.0 )
 		self.MInfoRR.setPoint = 0.0
 		self.RRMotor.set( 0.0 )
+	#Drive Functions
+	def setTranslation( self, X, Y ):
+		self.TX = X * math.sqrt( 2 ) * self.prescaleT
+		self.TY = Y * self.prescaleT
 
-	def getEnabled( self ):
-		return self.enabled
+	def setRotation( self, R ):
+		self.TR = R * self.prescaleR
 
 	def pushTransform( self ):
 		LX = self.TX
@@ -172,41 +160,28 @@ class Drive( ):
 			self.RLMotor.set( Speeds[2] )
 			self.MInfoRR.setPoint = Speeds[3]
 			self.RRMotor.set( Speeds[3] )
-
-	def setMaxVelocity( self, max ):
-		self.MaxV = max * 1.0
+	#Get Functions
+	def getEnabled( self ):
+		return self.enabled
 
 	def getMotorScale( self ):
 		return self.Scale
 
-	def setPreScale( self, Translation, Rotation ):
-		self.prescaleR = Rotation
-		self.prescaleT = Translation
 
-	def setSinInverted(self, inverted):
-		self.sinInverted = inverted
 	def getPreScaleT( self ):
 		return self.prescaleT
 
 	def getPreScaleR( self ):
 		return self.prescaleR
 
-	def setTranslation( self, X, Y ):
-		self.TX = X * math.sqrt( 2 ) * self.prescaleT
-		self.TY = Y * self.prescaleT
-
-	def setRotation( self, R ):
-		self.TR = R * self.prescaleR
-
-	def ScaleSpeeds( self, WheelSpeeds ):
-		for i in range( len( WheelSpeeds ) ):
-			WheelSpeeds[i] *= self.MaxV
-
 	def getDescription( self ):
 		return "Robot Drive"
 
-	def stopMotor( self ):
+	def getNumMotors( self ):
+		return 4
 
+	#Utility Functions
+	def stopMotor( self ):
 		if self.FLMotor is not None:
 			self.FLMotor.set( 0.0 )
 		if self.FRMotor is not None:
@@ -217,7 +192,32 @@ class Drive( ):
 			self.RRMotor.set( 0.0 )
 		#self.feed( )
 
+	def ScaleSpeeds( self, WheelSpeeds ):
+		for i in range( len( WheelSpeeds ) ):
+			WheelSpeeds[i] *= self.MaxV
 
-	def getNumMotors( self ):
-		return 4
+	def configMotors( self ):
+		self.CANTalonConfig.configure( self.FLMotor )
+		self.CANTalonConfig.configure( self.FRMotor )
+		self.CANTalonConfig.configure( self.RLMotor )
+		self.CANTalonConfig.configure( self.RRMotor )
 
+	def configSensorI( self ):
+		self.FLMotor.reverseSensor( self.MInfoFL.sensorInverted )
+		self.FRMotor.reverseSensor( self.MInfoFR.sensorInverted )
+		self.RLMotor.reverseSensor( self.MInfoRL.sensorInverted )
+		self.RRMotor.reverseSensor( self.MInfoRR.sensorInverted )
+
+	def enabledMotorFix( self ):
+		if self.enabled:
+
+			self.configSensorI()
+
+			self.FLMotor.set(
+				self.MInfoFL.setPoint * (-1 if self.MInfoFL.motorInverted else 1) )
+			self.FRMotor.set(
+				self.MInfoFR.setPoint * (-1 if self.MInfoFR.motorInverted else 1) )
+			self.RLMotor.set(
+				self.MInfoRL.setPoint * (-1 if self.MInfoRL.motorInverted else 1) )
+			self.RRMotor.set(
+				self.MInfoRR.setPoint * (-1 if self.MInfoRR.motorInverted else 1) )
