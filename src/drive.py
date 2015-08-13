@@ -132,7 +132,7 @@ class Drive( ):
 
 		ForceAngle = math.atan2( LX, LY )
 
-		ForceAngle += PI_DIV_4
+		ForceAngle += self.PI_DIV_4
 
 		# implement mag direction filterrrss
 
