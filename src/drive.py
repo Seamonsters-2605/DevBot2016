@@ -38,15 +38,16 @@ class Drive( ):
 
 	PI_Div_4 = 0.78539816339
 
-	def __init__( self, config , FL , FR , RL  , RR  ):
+	def __init__( self, FL , FR , RL  , RR  , config):
 
 		super( ).__init__( )
 
-		self.config = config
 		self.FLMotor = FL
 		self.FRMotor = FR
 		self.RLMotor = RL
 		self.RRMotor = RR
+		self.config = config
+
 
 		self.enabled = False
 		self.powerscale = 1.0
