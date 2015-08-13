@@ -38,8 +38,15 @@ class Drive( ):
 
 	PI_Div_4 = 0.78539816339
 
-	def __init__( self, *args ):
+	def __init__( self, config , FL , FR , RL  , RR  ):
+
 		super( ).__init__( )
+
+		self.config = config
+		self.FLMotor = FL
+		self.FRMotor = FR
+		self.RLMotor = RL
+		self.RRMotor = RR
 
 		self.enabled = False
 		self.powerscale = 1.0
@@ -50,15 +57,6 @@ class Drive( ):
 		self.prescaleR = 1
 		self.prescaleT = 1
 		self.sinInverted = False
-
-		if len( args ) == 5:
-			self.FLMotor = args[0]
-			self.FRMotor = args[1]
-			self.RLMotor = args[2]
-			self.RRMotor = args[3]
-			self.CANTalonConfig = args[4]
-		else:
-			raise ValueError( "don't know how to handle %d positional arguments" % len( args ) )
 
 		self.MInfoFL = self.MotorInfo( )
 		self.MInfoFR = self.MotorInfo( )
