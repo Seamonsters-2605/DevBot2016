@@ -25,11 +25,7 @@ class MyRobot( wpilib.IterativeRobot ):
 
 		self.vProfile = MecanumVelocityProfile(2)
 		self.strafeTVP = MecanumXYTVPFilter(4)
-		# self.M_FR.reverseSensor(False)
-		# self.M_RR.reverseSensor(False)
 
-		# self.M_FR.reverseOutput(True)
-		# self.M_RR.reverseOutput(True)
 		self.Drive = Drive( self.M_FL, self.M_FR, self.M_RL, self.M_RR, self.VelocityConfig )
 		self.Drive.setMotorInversions( False, True, False, True )
 		self.Drive.setSensorInversions( False, True, False, True )
