@@ -36,7 +36,6 @@ class MyRobot( wpilib.IterativeRobot ):
 		self.Drive.setMaxVelocity( 3000 )
 		self.Drive.addMDFilter(self.vProfile)
 		self.Drive.addXYFilter(self.strafeTVP)
-		self.Drive.removeXYFilter(self.strafeTVP)
 
 
 		# Sticks
