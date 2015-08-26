@@ -253,9 +253,8 @@ class Drive( ):
 			ind = self.XYFilter.index( filter )
 			if ind != -1:
 				self.XYFilter.pop( ind )
-				if len( self.XYFilter ) == 0:  # serperate this out into its own function at some point..
+				if len( self.XYFilter ) == 0:  # separate this out into its own function at some point..
 					self.XYFilter = None
-
 	def addRFilter( self, filter ):
 		if filter != None and self.checkFilterType( filter ) == "1_1":
 			if self.RFilter == None:
