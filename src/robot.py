@@ -23,6 +23,8 @@ class MyRobot( wpilib.IterativeRobot ):
 		self.M_RL = wpilib.CANTalon( 53 )
 		self.M_RR = wpilib.CANTalon( 54 )
 
+		self.lift = wpilib.CANTalon( 41 )
+
 		self.vProfile = MecanumVelocityProfile(2)
 		self.strafeTVP = MecanumXYTVPFilter(4)
 		# self.M_FR.reverseSensor(False)
@@ -58,6 +60,13 @@ class MyRobot( wpilib.IterativeRobot ):
 		print("Enabled")
 
 	def teleopPeriodic( self ):
+		if self.LeftStick.getRawButton(1) != 0:
+			self.lift.set( 1 )
+		elif self.LeftStick.getRawButton(2) != 0:
+			self.lift.set( -1 )
+		else:
+			self.lift.set( 0 )
+
 		self.Drive.setTranslation( self.LeftStick.getX( ), self.LeftStick.getY( ))
 		self.Drive.setRotation( self.RightStick.getX( ) )
 		self.Drive.pushTransform( )
