@@ -25,3 +25,13 @@ class SmartJoystick(wpilib.Joystick):
 
 	def getZ(self, hand=None, inv = False):
 		return self.checkDeadband(self.getRawAxis(self.axes[self.AxisType.kZ])) * (-1.0 if inv else 1.0)
+
+	def getBolButton(self, bnumber):
+		bnumber = int(bnumber)
+		if bnumber < 0 or bnumber > self.getButtonCount():
+			raise ValueError("not a valid button")
+
+		if self.getRawButton(bnumber) == 0:
+			return False
+		if self.getRawButton(bnumber) != 0:
+			return True
