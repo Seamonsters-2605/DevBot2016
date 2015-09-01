@@ -56,14 +56,14 @@ class MyRobot( wpilib.IterativeRobot ):
 		print("Enabled")
 
 	def teleopPeriodic( self ):
-		if self.LeftStick.getRawButton(1) != 0:
+		if self.LeftStick.getBolButton(1):
 			self.lift.set( 1 )
-		elif self.LeftStick.getRawButton(2) != 0:
+		elif self.LeftStick.getBolButton(2):
 			self.lift.set( -1 )
 		else:
 			self.lift.set( 0 )
 
-		self.Drive.setTranslation( self.LeftStick.getX( ), self.LeftStick.getY( ))
+		self.Drive.setTranslation( self.LeftStick.getX( ), self.LeftStick.getY(inv=True))
 		self.Drive.setRotation( self.RightStick.getX( ) )
 		self.Drive.pushTransform( )
 
