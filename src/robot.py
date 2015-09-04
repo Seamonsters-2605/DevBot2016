@@ -2,6 +2,8 @@ __author__ = 'Ian'
 
 import wpilib
 
+import serial
+
 from drive import Drive
 from cantalonconfig import CANTalonConfig
 from smartjoystick import SmartJoystick
@@ -35,7 +37,7 @@ class MyRobot( wpilib.IterativeRobot ):
 		self.Drive.addMDFilter(self.vProfile)
 		self.Drive.addXYFilter(self.strafeTVP)
 
-
+		#self.serialport1 =
 		# Sticks
 		self.RightStick = SmartJoystick( 1 , AxisDeadband=0.08)
 		self.LeftStick = SmartJoystick( 0  , AxisDeadband=0.08)
