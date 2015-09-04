@@ -51,7 +51,7 @@ class Nav6():
 		buff[1] = Nav6Protocol.MSGID_STREAM_CMD
 		buff[2] = Nav6Protocol.STREAM_CMD_STREAM_TYPE_QUATERNION
 		self.setStreamUint8 ( buff , 3, updateRate)
-		self.setSteamTermination ( buff , 5 )
+		self.setStreamTermination ( buff , 5 )
 
 		self.serial.write(buff)
 		self.serial.flush()
@@ -63,22 +63,50 @@ class Nav6():
 			sum += buff
 		return sum
 
-	def setStreamUint8(self, buffer , index , value):
+	def setStreamUint8(self, buffer , index , value): #not finished
 
 		buffer [ index + 1 ] = 1
 		buffer [ index  ] = 1
 
 
-	def setStreamUint16(self, buffer , index , value):
+	def setStreamUint16(self, buffer , index , value): # not finsihed
 		buffer[ index + 3 ] = 1
 		buffer[ index + 2 ] = 1
 		buffer[ index + 1 ] = 1
 		buffer [ index ] = 1
 
-	def setStreamFloat(self , buffer , index , value ):
+	def setStreamFloat(self , buffer , index , value ): #not finshed
 		buffer[ index ] = '+' if value > 0 else '-'
 		if value < 0:
 			value = -value # check for error later
+
+	def getStreamUint8(self , buffer , index ):
+		pass
+
+	def getStreamInt8(self , buffer , index ):
+		pass
+
+	def getStreamUint16(self , buffer , index ):
+		pass
+
+	def getStreamInt16(self , buffer , index ):
+		pass
+
+	def getStreamNumber(self, buffer ,index ):
+		pass
+
+	def setStreamTermination(self , buffer , index ):
+		pass
+
+	def serialUpdate(self, buffer , messageLength):
+		pass
+
+	def decodeRegularResponse(self , buffer , length):
+		pass
+
+	def decodeQuaternionResponse(self , buffer , length):
+		pass
+	
 
 
 class Quaternion ():
