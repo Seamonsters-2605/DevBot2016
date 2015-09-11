@@ -1,7 +1,11 @@
 __author__ = 'Ian'
+
 import math
-from dspfilter import *
 import time
+
+from .dspfilter import *
+
+__all__ = ["MecanumVelocityProfile" , "MecanumXYTVPFilter"]
 
 class MecanumVelocityProfile(DSPFilter_2_2):
 	def __init__(self, exponent):

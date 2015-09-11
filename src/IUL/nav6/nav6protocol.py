@@ -1,6 +1,8 @@
 __author__ = 'Ian'
 from enum import Enum
 
+__all__ = ["Nav6Protocol"]
+
 class Nav6Protocol(Enum):
 
 	PACKET_START_CHAR = '!'

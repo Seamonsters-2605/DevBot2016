@@ -9,9 +9,10 @@
 # Initial patch to use ctypes by Giovanni Bajo <rasky@develer.com>
 
 import ctypes
+
 from serial import win32
 
-from serial.serialutil import *
+from IUL.serial.serialutil import *
 
 
 def device(portnum):

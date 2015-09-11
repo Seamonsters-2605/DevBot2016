@@ -11,16 +11,16 @@ VERSION = '2.7'
 import sys
 
 if sys.platform == 'cli':
-    from serial.serialcli import *
+    from IUL.serial import *
 else:
     import os
     # chose an implementation, depending on os
     if os.name == 'nt': #sys.platform == 'win32':
-        from serial.serialwin32 import *
+        from IUL.serial.serialwin32 import *
     elif os.name == 'posix':
-        from serial.serialposix import *
+        from IUL.serial.serialposix import *
     elif os.name == 'java':
-        from serial.serialjava import *
+        from IUL.serial.serialjava import *
     else:
         raise ImportError("Sorry: no implementation for your platform ('%s') available" % (os.name,))
 

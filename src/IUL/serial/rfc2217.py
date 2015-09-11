@@ -59,13 +59,15 @@
 #   RFC).
 # the order of the options is not relevant
 
-from serial.serialutil import *
 import time
 import struct
 import socket
 import threading
 import queue
 import logging
+
+from IUL.serial.serialutil import *
+
 
 # port string is expected to be something like this:
 # rfc2217://host:port

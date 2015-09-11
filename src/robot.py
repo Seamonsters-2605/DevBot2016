@@ -2,12 +2,10 @@ __author__ = 'Ian'
 
 import wpilib
 
-import serial
-
 from drive import Drive
 from cantalonconfig import CANTalonConfig
-from smartjoystick import SmartJoystick
-from filters import *
+from IUL.input.smartjoystick import SmartJoystick
+
 
 class MyRobot( wpilib.IterativeRobot ):
 	def robotInit( self ):
@@ -33,14 +31,14 @@ class MyRobot( wpilib.IterativeRobot ):
 		self.Drive = Drive( self.M_FL, self.M_FR, self.M_RL, self.M_RR, self.VelocityConfig )
 		self.Drive.setMotorInversions( False, True, False, True )
 		self.Drive.setSensorInversions( False, True, False, True )
-		self.Drive.setMaxVelocity( 3000 )
+		self.Drive.setMaxVelocity( 1023 )
 		self.Drive.addMDFilter(self.vProfile)
 		self.Drive.addXYFilter(self.strafeTVP)
 
 		#self.serialport1 =
 		# Sticks
-		self.RightStick = SmartJoystick( 1 , AxisDeadband=0.08)
-		self.LeftStick = SmartJoystick( 0  , AxisDeadband=0.08)
+		self.RightStick = SmartJoystick( 1 , axisDeadband=0.08)
+		self.LeftStick = SmartJoystick( 0  , axisDeadband=0.08)
 
 	# Drive
 	# self.Drive = wpilib.RobotDrive( self.M_FL, self.M_RL, self.M_FR, self.M_RR )

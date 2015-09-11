@@ -8,9 +8,15 @@
 # repr, useful for debug purposes)
 
 
-import sys, os, serial, threading, atexit
+import sys
+import os
+import threading
+import atexit
+
+import serial
+
 try:
-    from serial.tools.list_ports import comports
+    from IUL.serial.tools.list_ports import comports
 except ImportError:
     comports = None
 

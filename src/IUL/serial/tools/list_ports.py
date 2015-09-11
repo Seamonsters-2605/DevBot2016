@@ -16,17 +16,15 @@ Additionally a grep function is supplied that can be used to search for ports
 based on their descriptions or hardware ID.
 """
 
-import sys, os, re
-
 # chose an implementation, depending on os
 #~ if sys.platform == 'cli':
 #~ else:
 import os
 # chose an implementation, depending on os
 if os.name == 'nt': #sys.platform == 'win32':
-    from serial.tools.list_ports_windows import *
+    from IUL.serial.tools.list_ports_windows import *
 elif os.name == 'posix':
-    from serial.tools.list_ports_posix import *
+    from IUL.serial.tools.list_ports_posix import *
 #~ elif os.name == 'java':
 else:
     raise ImportError("Sorry: no implementation for your platform ('%s') available" % (os.name,))

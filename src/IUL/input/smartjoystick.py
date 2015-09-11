@@ -1,16 +1,17 @@
 __author__ = 'Ian'
 
 import wpilib
-import math
+
 __all_ = ["SmartJoystick"]
 
 class SmartJoystick(wpilib.Joystick):
-	def __init__(self, port, AxisDeadband = 0):
+	def __init__(self, port, axisDeadband = 0):
 		super().__init__( port )
-		self.axisDeadBand = AxisDeadband
+		self.axisDeadBand = axisDeadband
 
 	def setDeadband(self, deadband):
 		self.axisDeadBand = deadband
+
 	def checkDeadband(self, i):
 		if abs(i) <= self.axisDeadBand:
 			return 0.0

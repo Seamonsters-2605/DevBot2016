@@ -6,9 +6,9 @@ def ValidHandle(value, func, arguments):
         raise ctypes.WinError()
     return value
 
-import serial
-from serial.win32 import ULONG_PTR, is_64bit
-from ctypes.wintypes import HANDLE
+
+from IUL import serial
+from IUL.serial.win32 import ULONG_PTR
 from ctypes.wintypes import BOOL
 from ctypes.wintypes import HWND
 from ctypes.wintypes import DWORD
@@ -234,7 +234,6 @@ def comports():
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # test
 if __name__ == '__main__':
-    import serial
 
     for port, desc, hwid in sorted(comports()):
         print(("%s: %s [%s]" % (port, desc, hwid)))

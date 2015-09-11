@@ -6,10 +6,9 @@
 # (C) 2008 Chris Liechti <cliechti@gmx.net>
 # this is distributed under a free software license, see license.txt
 
-import clr
 import System
 import System.IO.Ports
-from serial.serialutil import *
+from IUL.serial.serialutil import *
 
 
 def device(portnum):

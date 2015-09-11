@@ -12,7 +12,9 @@
 # URL format:    hwgrep://regexp
 
 import serial
-import serial.tools.list_ports
+
+import IUL.serial.tools.list_ports
+
 
 class Serial(serial.Serial):
     """Just inherit the native Serial port implementation and patch the open function."""
@@ -28,7 +30,7 @@ class Serial(serial.Serial):
         """extract host and port from an URL string"""
         if url.lower().startswith("hwgrep://"): url = url[9:]
         # use a for loop to get the 1st element from the generator
-        for port, desc, hwid in serial.tools.list_ports.grep(url):
+        for port, desc, hwid in IUL.serial.tools.list_ports.grep(url):
             return port
         else:
             raise serial.SerialException('no ports found matching regexp %r' % (url,))
