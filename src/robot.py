@@ -5,7 +5,8 @@ import wpilib
 from drive import Drive
 from cantalonconfig import CANTalonConfig
 from IUL.input.smartjoystick import SmartJoystick
-
+from IUL.filters.filters import *
+from IUL.nav6.nav6 import Nav6
 
 class MyRobot( wpilib.IterativeRobot ):
 	def robotInit( self ):

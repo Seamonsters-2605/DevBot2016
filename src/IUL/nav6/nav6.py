@@ -144,10 +144,10 @@ class Nav6():
 		buffer[ messageLength + 3 ] = '\n'
 		buffer[ messageLength + 4] = '\0'
 
-	def serialUpdate(self, buffer , messageLength):
+	def serialUpdate(self): #thread??/?
 		timeout = intervaltimer.IntervalTimer()
 		offset = 0
-
+		buffer = ""
 		self.serial.setTimeout( 2000 )
 		self.serial.open()
 
@@ -160,7 +160,12 @@ class Nav6():
 				timeout.restart()
 				offset = 0
 
+			buffer = self.serial.read(256)
+			offset += len(buffer)
 
+			i = 0
+			while( i < offset):
+				decodeOffset = self.decodeQuaternionResponse( buffer )
 
 
 	def decodeRegularResponse(self , buffer , length):
