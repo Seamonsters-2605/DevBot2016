@@ -2,13 +2,16 @@ __author__ = 'Ian'
 import math
 
 from .nav6protocol import *
-from IUL import serial
+import serial
 from ..timer import intervaltimer
 
 class Nav6():
-	def __init__(self, serial1 , updateRate):
+	def __init__(self, serialNumber , updateRate):
 		self.stopRequested = False
-		self.serial = serial.Serial(port=0 , baudrate= self.getDefaultBaudRate())
+		self.serial = serial.Serial()
+		self.serial.port = serialNumber
+		self.serial.baudrate = self.getDefaultBaudRate()
+
 		self.updateRate = updateRate
 		self.yaw = 0
 		self.pitch = 0
@@ -45,37 +48,43 @@ class Nav6():
 	def getDefaultBaudRate(self):
 		return 57600
 
-	def sendStreamCommand(self, updateRate):
+	def sendStreamCommand(self, updateRate, streamType):
 		buff = [0] * 9
 
-		buff[0] = Nav6Protocol.PACKET_START_CHAR
-		buff[1] = Nav6Protocol.MSGID_STREAM_CMD
-		buff[2] = Nav6Protocol.STREAM_CMD_STREAM_TYPE_QUATERNION
+		buff[0] = ord(PACKET_START_CHAR)
+		buff[1] = ord(MSGID_STREAM_CMD)
+		buff[2] = ord(STREAM_CMD_STREAM_TYPE_QUATERNION)
+
 		self.setStreamUint8 ( buff , 3, updateRate)
 		self.setStreamTermination ( buff , 5 )
 
-		self.serial.write(buff)
-		self.serial.flush()
+		print("Buff\n")
+		for item in buff:
+			print(item)
+		#self.serial.write(buff)
+		#self.serial.flush()
 		#reset serial???
 
 	def calcaulteChecksum(self , buffer , length):
 		sum = 0
-		for buff in buffer:
-			sum += buff
+		for i in range( length):
+			sum += buffer[i]
+
 		return sum
 
 	def setStreamUint8(self, buffer , index , value):
 		hexref = '0123456789ABCDEF'
-		buffer [ index + 1 ] = int( hexref [ value & 0x0F])
-		buffer [ index  ] = int( hexref [ value >> 4] )
+		print(value)
+		buffer [ index + 1 ] = ord( hexref [ value & 0x0F])
+		buffer [ index  ] = ord( hexref [ value >> 4] )
 
 
 	def setStreamUint16(self, buffer , index , value):
 		hexRef = '0123456789ABCDEF'
-		buffer[ index + 3 ] =  int( hexRef[ value & 0x0F])
-		buffer[ index + 2 ] = int ( hexRef[ value >> 4 ])
-		buffer[ index + 1 ] = int ( hexRef[ value >> 8 ])
-		buffer [ index ] = int ( hexRef[ (value >> 12) & 0x000F ])
+		buffer[ index + 3 ] =  ord( hexRef[ value & 0x0F])
+		buffer[ index + 2 ] =  ord( hexRef[ value >> 4 ])
+		buffer[ index + 1 ] =  ord( hexRef[ value >> 8 ])
+		buffer [ index ] = ord( hexRef[ (value >> 12) & 0x000F ])
 
 	def setStreamFloat(self , buffer , index , value ): #not finshed
 		decRef = '0123456789'
@@ -139,6 +148,7 @@ class Nav6():
 		return  value
 
 	def setStreamTermination(self , buffer , messageLength ):
+		print(buffer)
 		self.setStreamUint8( buffer , messageLength, self.calcaulteChecksum( buffer, messageLength))
 		buffer[ messageLength + 2 ] = '\r'
 		buffer[ messageLength + 3 ] = '\n'
@@ -174,12 +184,12 @@ class Nav6():
 	def decodeQuaternionResponse(self , buffer , length):
 		pass
 
+	def getSerial(self):
+		return self.serial
 
 class Quaternion ():
 	def __init__ (self):
-		self.x
-		self.y
-		self.z
-		self.w
-
-
+		self.x = 0
+		self.y = 0
+		self.z = 0
+		self.w = 0
