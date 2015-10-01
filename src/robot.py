@@ -29,7 +29,7 @@ class MyRobot( wpilib.IterativeRobot ):
 		self.Drive = Drive( self.M_FL, self.M_FR, self.M_RL, self.M_RR, self.VelocityConfig )
 		self.Drive.setMotorInversions( False, True, False, True )
 		self.Drive.setSensorInversions( False, True, False, True )
-		self.Drive.setMaxVelocity( 3000 )
+		self.Drive.setMaxVelocity( 9000 )
 		self.Drive.addMDFilter(self.vProfile)
 		self.Drive.addXYFilter(self.strafeTVP)
 		self.Drive.removeXYFilter(self.strafeTVP)
