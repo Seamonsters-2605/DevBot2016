@@ -1,13 +1,15 @@
 __author__ = 'Ian'
 
 import math
+from enum import Enum
+
 import wpilib
 
 # from wpilib.motorsafety import MotorSafety #Implement this in the future
 
-from enum import Enum
 
-__all__ = ["Drive"]
+
+__all__ = [ "Drive" ]
 
 
 class Drive( ):
@@ -33,7 +35,7 @@ class Drive( ):
 	kDefaultSensitivity = 0.5
 	kDefaultMaxOutput = 1.0
 
-	acceptedFilterTypes = ["1_1", "2_2"]
+	acceptedFilterTypes = [ "1_1", "2_2" ]
 
 	def __init__( self, FL, FR, RL, RR, config ):
 
@@ -134,7 +136,7 @@ class Drive( ):
 				filter.compute( LX, LY )
 				LX = filter.readA( )
 				LY = filter.readB( )
-				
+
 		# Rotation filters
 		if self.RFilter != None:
 			for filter in self.RFilter:
@@ -158,25 +160,25 @@ class Drive( ):
 		cosCalc = math.cos( forceAngle ) * forceMag
 
 		if self.enabled:
-			Speeds = [0] * 4
+			Speeds = [ 0 ] * 4
 
-			Speeds[0] = ((cosCalc if self.sinInverted else sinCalc) + LR) * self.MInfoFL.motorI( )
-			Speeds[1] = ((sinCalc if self.sinInverted else cosCalc) - LR) * self.MInfoFR.motorI( )
-			Speeds[2] = ((sinCalc if self.sinInverted else cosCalc) + LR) * self.MInfoRL.motorI( )
-			Speeds[3] = ((cosCalc if self.sinInverted else sinCalc) - LR) * self.MInfoRR.motorI( )
+			Speeds[ 0 ] = ((cosCalc if self.sinInverted else sinCalc) + LR) * self.MInfoFL.motorI( )
+			Speeds[ 1 ] = ((sinCalc if self.sinInverted else cosCalc) - LR) * self.MInfoFR.motorI( )
+			Speeds[ 2 ] = ((sinCalc if self.sinInverted else cosCalc) + LR) * self.MInfoRL.motorI( )
+			Speeds[ 3 ] = ((cosCalc if self.sinInverted else sinCalc) - LR) * self.MInfoRR.motorI( )
 
 			wpilib.RobotDrive.normalize( Speeds )
 
 			self.scaleSpeeds( Speeds )
 
-			self.MInfoFL.setPoint = Speeds[0]
-			self.FLMotor.set( Speeds[0] )
-			self.MInfoFR.setPoint = Speeds[1]
-			self.FRMotor.set( Speeds[1] )
-			self.MInfoRL.setPoint = Speeds[2]
-			self.RLMotor.set( Speeds[2] )
-			self.MInfoRR.setPoint = Speeds[3]
-			self.RRMotor.set( Speeds[3] )
+			self.MInfoFL.setPoint = Speeds[ 0 ]
+			self.FLMotor.set( Speeds[ 0 ] )
+			self.MInfoFR.setPoint = Speeds[ 1 ]
+			self.FRMotor.set( Speeds[ 1 ] )
+			self.MInfoRL.setPoint = Speeds[ 2 ]
+			self.RLMotor.set( Speeds[ 2 ] )
+			self.MInfoRR.setPoint = Speeds[ 3 ]
+			self.RRMotor.set( Speeds[ 3 ] )
 
 	# Get Functions
 	def getEnabled( self ):
@@ -210,7 +212,7 @@ class Drive( ):
 
 	def scaleSpeeds( self, WheelSpeeds ):
 		for i in range( len( WheelSpeeds ) ):
-			WheelSpeeds[i] *= self.MaxV
+			WheelSpeeds[ i ] *= self.MaxV
 
 	def configMotors( self ):
 		self.config.configure( self.FLMotor )
@@ -244,7 +246,7 @@ class Drive( ):
 	def addXYFilter( self, filter ):
 		if filter != None and self.checkFilterType( filter ) == "2_2":
 			if self.XYFilter == None:
-				self.XYFilter = []
+				self.XYFilter = [ ]
 			self.XYFilter.append( filter )
 
 	def removeXYFilter( self, filter ):
@@ -255,10 +257,11 @@ class Drive( ):
 				self.XYFilter.pop( ind )
 				if len( self.XYFilter ) == 0:  # separate this out into its own function at some point..
 					self.XYFilter = None
+
 	def addRFilter( self, filter ):
 		if filter != None and self.checkFilterType( filter ) == "1_1":
 			if self.RFilter == None:
-				self.RFilter = []
+				self.RFilter = [ ]
 			self.RFilter.append( filter )
 
 	def removeRFilter( self, filter ):
@@ -272,7 +275,7 @@ class Drive( ):
 	def addMDFilter( self, filter ):
 		if filter != None and self.checkFilterType( filter ) == "2_2":
 			if self.MDFilter == None:
-				self.MDFilter = []
+				self.MDFilter = [ ]
 			self.MDFilter.append( filter )
 
 	def removeMDFilter( self, filter ):

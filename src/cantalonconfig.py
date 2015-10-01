@@ -1,6 +1,6 @@
 __author__ = 'Ian'
 
-__all__ = ["CANTalonConfig"]
+__all__ = [ "CANTalonConfig" ]
 
 
 class CANTalonConfig:
@@ -59,7 +59,7 @@ class CANTalonConfig:
 		CANTalon.changeControlMode( self.Mode )
 
 		if self.feedbackType != None:
-			CANTalon.setFeedbackDevice(self.feedbackType)
+			CANTalon.setFeedbackDevice( self.feedbackType )
 
 		if self.controlSlot != -1:
 			CANTalon.setProfile( self.controlSlot )

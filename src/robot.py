@@ -6,7 +6,7 @@ from drive import Drive
 from cantalonconfig import CANTalonConfig
 from IUL.input.smartjoystick import SmartJoystick
 from IUL.filters.filters import *
-from IUL.nav6.nav6 import Nav6
+
 
 class MyRobot( wpilib.IterativeRobot ):
 	def robotInit( self ):
@@ -26,20 +26,20 @@ class MyRobot( wpilib.IterativeRobot ):
 
 		self.lift = wpilib.CANTalon( 41 )
 
-		self.vProfile = MecanumVelocityProfile(2)
-		self.strafeTVP = MecanumXYTVPFilter(4)
+		self.vProfile = MecanumVelocityProfile( 2 )
+		self.strafeTVP = MecanumXYTVPFilter( 4 )
 
 		self.Drive = Drive( self.M_FL, self.M_FR, self.M_RL, self.M_RR, self.VelocityConfig )
 		self.Drive.setMotorInversions( False, True, False, True )
 		self.Drive.setSensorInversions( False, True, False, True )
 		self.Drive.setMaxVelocity( 1023 )
-		self.Drive.addMDFilter(self.vProfile)
-		self.Drive.addXYFilter(self.strafeTVP)
+		self.Drive.addMDFilter( self.vProfile )
+		self.Drive.addXYFilter( self.strafeTVP )
 
-		#self.serialport1 =
+		# self.serialport1 =
 		# Sticks
-		self.RightStick = SmartJoystick( 1 , axisDeadband=0.08)
-		self.LeftStick = SmartJoystick( 0  , axisDeadband=0.08)
+		self.RightStick = SmartJoystick( 1, axisDeadband=0.08 )
+		self.LeftStick = SmartJoystick( 0, axisDeadband=0.08 )
 
 	# Drive
 	# self.Drive = wpilib.RobotDrive( self.M_FL, self.M_RL, self.M_FR, self.M_RR )
@@ -53,18 +53,18 @@ class MyRobot( wpilib.IterativeRobot ):
 		pass
 
 	def teleopInit( self ):
-		self.Drive.enable()
-		print("Enabled")
+		self.Drive.enable( )
+		print( "Enabled" )
 
 	def teleopPeriodic( self ):
-		if self.LeftStick.getBolButton(1):
+		if self.LeftStick.getBolButton( 1 ):
 			self.lift.set( 1 )
-		elif self.LeftStick.getBolButton(2):
+		elif self.LeftStick.getBolButton( 2 ):
 			self.lift.set( -1 )
 		else:
 			self.lift.set( 0 )
 
-		self.Drive.setTranslation( self.LeftStick.getX( ), self.LeftStick.getY(inv=True))
+		self.Drive.setTranslation( self.LeftStick.getX( ), self.LeftStick.getY( inv=True ) )
 		self.Drive.setRotation( self.RightStick.getX( ) )
 		self.Drive.pushTransform( )
 
@@ -73,8 +73,10 @@ class MyRobot( wpilib.IterativeRobot ):
 
 	def testPeriodic( self ):
 		pass
-	def disabledInit(self):
-		self.Drive.disable()
+
+	def disabledInit( self ):
+		self.Drive.disable( )
+
 
 if __name__ == "__main__":
 	wpilib.run( MyRobot )
