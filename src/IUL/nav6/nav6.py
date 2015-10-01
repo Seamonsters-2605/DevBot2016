@@ -51,9 +51,9 @@ class Nav6():
 	def sendStreamCommand(self, updateRate, streamType):
 		buff = [0] * 9
 
-		buff[0] = ord(PACKET_START_CHAR)
-		buff[1] = ord(MSGID_STREAM_CMD)
-		buff[2] = ord(STREAM_CMD_STREAM_TYPE_QUATERNION)
+		buff[0] = (PACKET_START_CHAR)
+		buff[1] = (MSGID_STREAM_CMD)
+		buff[2] = streamType
 
 		self.setStreamUint8 ( buff , 3, updateRate)
 		self.setStreamTermination ( buff , 5 )
@@ -68,15 +68,21 @@ class Nav6():
 	def calcaulteChecksum(self , buffer , length):
 		sum = 0
 		for i in range( length):
-			sum += buffer[i]
+			sum += ord(buffer[i])
+
+		if sum >= 256:
+			mult = sum // 256
+			print("Sum: " + str(sum))
+			print("Mult: " + str(mult))
+			sum = sum - mult*256
 
 		return sum
 
 	def setStreamUint8(self, buffer , index , value):
 		hexref = '0123456789ABCDEF'
 		print(value)
-		buffer [ index + 1 ] = ord( hexref [ value & 0x0F])
-		buffer [ index  ] = ord( hexref [ value >> 4] )
+		buffer [ index + 1 ] = ( hexref [ value & 0x0F])
+		buffer [ index  ] = ( hexref [ value >> 4] )
 
 
 	def setStreamUint16(self, buffer , index , value):
@@ -152,7 +158,7 @@ class Nav6():
 		self.setStreamUint8( buffer , messageLength, self.calcaulteChecksum( buffer, messageLength))
 		buffer[ messageLength + 2 ] = '\r'
 		buffer[ messageLength + 3 ] = '\n'
-		buffer[ messageLength + 4] = '\0'
+		#buffer[ messageLength + 4] = '\0'
 
 	def serialUpdate(self): #thread??/?
 		timeout = intervaltimer.IntervalTimer()
