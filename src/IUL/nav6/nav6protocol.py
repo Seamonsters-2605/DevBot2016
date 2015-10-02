@@ -1,5 +1,4 @@
 __author__ = 'Ian'
-from enum import Enum
 
 # __all__ = ["Nav6Protocol"]
 
