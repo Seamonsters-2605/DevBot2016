@@ -4,35 +4,30 @@ import math
 import serial
 
 from .nav6protocol import *
+import threading
+import wpilib.timer
 from ..timer import intervaltimer
 
 
 class Nav6( ):
     def __init__( self, serialNumber, updateRate ):
         self.stopRequested = False
-        self.serial = serial.Serial( )
-        self.serial.port = serialNumber
-        self.serial.baudrate = self.getDefaultBaudRate( )
-
+        self.ser = serial.Serial(serialNumber,self.getDefaultBaudRate())
         self.updateRate = updateRate
         self.yaw = 0
         self.pitch = 0
         self.roll = 0
         self.compassHeading = 0
-        self.gravity = [ 0.0, 0.0, 0.0 ]
-        self.acceleration = [ 0.0, 0.0, 0.0 ]
-        self.orientation = Quaternion( )
         self.isStopped = True
-
-        pass
 
     def start( self ):
         self.stopRequested = False
-
+        self.thread = threading.Thread(target=self.serialUpdate,name="Nav6")
+        self.thread.start()
     # threading
     # ???
 
-    def stop( self, wait=False ):
+    def stop( self ):
         self.stopRequested = True
 
     def getYaw( self ):
@@ -50,7 +45,7 @@ class Nav6( ):
     def getDefaultBaudRate( self ):
         return 57600
 
-    def sendStreamCommand( self, updateRate, streamType ):
+    def sendStreamCommand( self, updateRate=10, streamType='y' ):
         buff = [ 0 ] * 9
 
         buff[ 0 ] = (PACKET_START_CHAR)
@@ -60,14 +55,15 @@ class Nav6( ):
         self.setStreamUint8( buff, 3, updateRate )
         self.setStreamTermination( buff, 5 )
 
-        strBuff = ""
+        strBuff = ''
         for item in buff:
             strBuff += item
         print( strBuff )
 
-    # self.serial.write(buff)
-    # self.serial.flush()
-    # reset serial???
+        barray = str.encode(strBuff)
+
+        self.ser.write(barray)
+        self.ser.flush()
 
     def calcaulteChecksum( self, buffer, length ):
         sum = 0
@@ -159,39 +155,39 @@ class Nav6( ):
         buffer[ messageLength + 2 ] = '\r'
         buffer[ messageLength + 3 ] = '\n'
 
-    # buffer[ messageLength + 4] = '\0'
-
-    def serialUpdate( self ):  # thread??/?
-        timeout = intervaltimer.IntervalTimer( )
-        offset = 0
-        buffer = ""
-        self.serial.setTimeout( 2000 )
-        self.serial.open( )
+    def serialUpdate( self ):
+        responce = ""
 
         self.sendStreamCommand( self.updateRate )
-        timeout.start( )
 
         while (not self.stopRequested):
-            if (timeout.getTimeMS( ) > 3000):
-                self.sendStreamCommand( self.updateRate )
-                timeout.restart( )
-                offset = 0
+            self.ser.flushInput()
+            responce = self.ser.readline()
 
-            buffer = self.serial.read( 256 )
-            offset += len( buffer )
+            responce = responce.decode()
 
-            i = 0
-            while (i < offset):
-                decodeOffset = self.decodeQuaternionResponse( buffer )
+            if responce[0] != '!':
+                continue
 
-    def decodeRegularResponse( self, buffer, length ):
-        pass
+            if len(responce) == 34:
+                self.decodeRegularResponse(responce)
+            else:
+                pass
+
+            wpilib.timer.Timer.delay(.02)
+
+
+    def decodeRegularResponse( self, strResponce ):
+        self.yaw = float(strResponce[2:9])
+        self.pitch = float(strResponce[9:16])
+        self.roll = float(strResponce[16:23])
+        self.compassHeading = float(strResponce[23:30])
 
     def decodeQuaternionResponse( self, buffer, length ):
         pass
 
     def getSerial( self ):
-        return self.serial
+        return self.ser
 
 
 class Quaternion( ):
