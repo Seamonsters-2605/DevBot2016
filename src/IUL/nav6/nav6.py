@@ -7,33 +7,40 @@ from .nav6protocol import *
 import threading
 import wpilib.timer
 
+#Notes Pitch and Roll need ranges mess with it appears they go from 0 to 90 to 0 on one part which doesn't make much
+#sense.... Also the changing to 360 and offset functions could use some work as well.
 
 class Nav6( ):
     def __init__( self, serialNumber, updateRate ):
         self.stopRequested = False
-        self.ser = serial.Serial(serialNumber,self.getDefaultBaudRate())
+        #This is here in case we are testing one a pc so the code doesn't crash bc the Nav6 isn't connected.
+        try:
+            self.ser = serial.Serial(serialNumber,self.getDefaultBaudRate())
+        except:
+            self.ser = None
+
         self.updateRate = updateRate
-        self.yaw = 0
-        self.pitch = 0
-        self.roll = 0
-        self.yOff = 0
-        self.pOff = 0
-        self.rOff = 0
-        self.cHOff = 0
-        self.compassHeading = 0
+        self.yaw = 0.0
+        self.pitch = 0.0
+        self.roll = 0.0
+        self.yOff = 0.0
+        self.pOff = 0.0
+        self.rOff = 0.0
+        self.cHOff = 0.0
+        self.compassHeading = 0.0
         self.isStopped = True
 
     def start( self ):
         self.stopRequested = False
         self.thread = threading.Thread(target=self.serialUpdate,name="Nav6")
         self.thread.start()
+        wpilib.timer.Timer.delay(.3)
         self.zero()
-        wpilib.timer.Timer.delay(.2)
 
     def stop( self ):
         self.stopRequested = True
 
-    def _zero(self):
+    def zero(self):
         print('Zeroing Nav6')
         self.yOff = self.calcOffset(self.yaw)
         self.rOff = self.calcOffset(self.roll)
@@ -53,13 +60,19 @@ class Nav6( ):
         return self.compassHeading
 
     def getYaw( self ):
-        return self.convertTo360(self.yaw) - self.yOff
+        return self.applyOffset(self.yaw,self.yOff)
 
     def getPitch( self ):
-        return self.convertTo360(self.pitch) - self.pOff
+        return self.applyOffset(self.pitch,self.pOff)
 
     def getRoll( self ):
-        return self.convertTo360(self.roll) - self.rOff
+        return self.applyOffset(self.roll,self.rOff)
+
+    def getSerial( self ):
+        return self.ser
+
+    def getDefaultBaudRate( self ):
+        return 57600
 
     def getCompassHeading( self ):
         return self.compassHeading - self.cHOff
@@ -113,6 +126,10 @@ class Nav6( ):
         self.pitch = float(strResponce[9:16])
         self.roll = float(strResponce[16:23])
         self.compassHeading = float(strResponce[23:30])
+        print("Yaw: %f Pitch: %f Roll: %f"%(self.getYaw(),self.getPitch(),self.getRoll()))
+        print("Yaw: %f Pitch: %f Roll: %f"%(self.yOff,self.pOff,self.rOff))
+        print("Yaw: %f Pitch: %f Roll: %f"%(self.getRawYaw(),self.getRawPitch(),self.getRawRoll()))
+        print()
 
     def decodeQuaternionResponse( self, buffer, length ):
         pass
@@ -134,12 +151,6 @@ class Nav6( ):
 
         return sum
 
-    def getSerial( self ):
-        return self.ser
-
-    def getDefaultBaudRate( self ):
-        return 57600
-
     def calcOffset(self,ypr):
         if ypr == 0:
             return 0
@@ -150,61 +161,19 @@ class Nav6( ):
     def convertTo360(self,value):
         if value < 0:
             return 360 - abs(value)
-        return value
+        elif value > 0:
+            return value
+        elif value == 0:
+            return 0
 
+    def applyOffset(self, value, offset):
+            value = self.convertTo360(value)
+            value = value - offset
+            if value < 0:
+                return 360 - abs(value)
+            return value
 
     def setStreamUint8( self, buffer, index, value ):
         hexref = '0123456789ABCDEF'
         buffer[ index + 1 ] = (hexref[ value & 0x0F ])
         buffer[ index ] = (hexref[ value >> 4 ])
-
-    def setStreamUint16( self, buffer, index, value ):
-        hexRef = '0123456789ABCDEF'
-        buffer[ index + 3 ] = ord( hexRef[ value & 0x0F ] )
-        buffer[ index + 2 ] = ord( hexRef[ value >> 4 ] )
-        buffer[ index + 1 ] = ord( hexRef[ value >> 8 ] )
-        buffer[ index ] = ord( hexRef[ (value >> 12) & 0x000F ] )
-
-    def setStreamFloat( self, buffer, index, value ):  # not finshed
-        decRef = '0123456789'
-        buffer[ index ] = '+' if value > 0 else '-'
-        if value < 0:
-            value = -value  # check for error later
-
-        buffer[ index + 1 ] = int( decRef[ int( math.fmod( value * 100.0, 10.0 ) ) ] )
-        buffer[ index + 1 ] = int( decRef[ int( math.fmod( value * 10.0, 10.0 ) ) ] )
-        buffer[ index + 1 ] = int( decRef[ int( math.fmod( value, 10.0 ) ) ] )
-        buffer[ index + 4 ] = int( '.' )
-        buffer[ index + 1 ] = int( decRef[ int( math.fmod( value / 10.0, 10.0 ) ) ] )
-        buffer[ index + 1 ] = int( decRef[ int( math.fmod( value / 100.0, 10.0 ) ) ] )
-
-    def getStreamUint8( self, buffer, index ):
-        zeroRef = int( '0' )
-        nineRef = int( '9' )
-        aRef = int( 'A' )
-
-        value = 0
-
-        if (buffer[ index ] >= zeroRef and buffer[ index ] <= nineRef):
-            value = (buffer[ index ] - zeroRef) << 4
-        else:
-            value = ((buffer[ index ] - aRef) + 10) << 4
-
-        if (buffer[ index + 1 ] >= zeroRef and buffer[ index + 1 ] <= nineRef):
-            value += buffer[ index + 1 ] - zeroRef
-        else:
-            value += (buffer[ index + 1 ] - aRef) + 10
-
-        return value
-
-    def getStreamInt8( self, buffer, index ):
-        return int( self.getStreamUint8( buffer, index ) )
-
-    def getStreamUint16( self, buffer, index ):
-        value = self.getStreamUint8( buffer, index ) << 8
-        value += self.getStreamUint8( buffer, index + 2 )
-
-        return value
-
-    def getStreamInt16( self, buffer, index ):
-        return int( self.getStreamUint8( buffer, index ) )

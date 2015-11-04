@@ -6,6 +6,7 @@ from drive import Drive
 from cantalonconfig import CANTalonConfig
 from IUL.input.smartjoystick import SmartJoystick
 from IUL.filters.filters import *
+from IUL.nav6.nav6 import Nav6
 
 
 class MyRobot( wpilib.IterativeRobot ):
@@ -36,10 +37,11 @@ class MyRobot( wpilib.IterativeRobot ):
         self.Drive.addMDFilter( self.vProfile )
         self.Drive.addXYFilter( self.strafeTVP )
 
-        # self.serialport1 =
         # Sticks
         self.RightStick = SmartJoystick( 1, axisDeadband=0.08 )
         self.LeftStick = SmartJoystick( 0, axisDeadband=0.08 )
+
+        self.nav = Nav6(0,15)
 
     # Drive
     # self.Drive = wpilib.RobotDrive( self.M_FL, self.M_RL, self.M_FR, self.M_RR )
