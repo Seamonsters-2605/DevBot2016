@@ -41,6 +41,8 @@ class MyRobot( wpilib.IterativeRobot ):
         self.RightStick = SmartJoystick( 1, axisDeadband=0.08 )
         self.LeftStick = SmartJoystick( 0, axisDeadband=0.08 )
 
+        self.SmartDashboard = wpilib.SmartDashboard()
+
         self.nav = Nav6(0,15)
 
     # Drive
@@ -57,6 +59,7 @@ class MyRobot( wpilib.IterativeRobot ):
     def teleopInit( self ):
         self.Drive.enable( )
         print( "Enabled" )
+        self.nav.start()
 
     def teleopPeriodic( self ):
         if self.LeftStick.getBolButton( 1 ):
@@ -65,6 +68,9 @@ class MyRobot( wpilib.IterativeRobot ):
             self.lift.set( -1 )
         else:
             self.lift.set( 0 )
+        if self.LeftStick.getBolButton(3):
+            self.nav.zero()
+        self.SmartDashboard.putDouble("Yaw:" , self.nav.getYaw())
 
         self.Drive.setTranslation( self.LeftStick.getX( ), self.LeftStick.getY( inv=True ) )
         self.Drive.setRotation( self.RightStick.getX( ) )

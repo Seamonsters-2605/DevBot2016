@@ -1,6 +1,7 @@
 __author__ = 'Ian'
 
 import wpilib
+from ..util.vector import Vector
 
 __all_ = [ "SmartJoystick" ]
 
@@ -36,3 +37,6 @@ class SmartJoystick( wpilib.Joystick ):
         if self.getRawButton( bNumber ) == 0:
             return False
         return True
+
+    def getMagnitudeVector(self):
+        return Vector(XY=[self.getX(),self.getY()])

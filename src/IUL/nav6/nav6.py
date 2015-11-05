@@ -126,10 +126,10 @@ class Nav6( ):
         self.pitch = float(strResponce[9:16])
         self.roll = float(strResponce[16:23])
         self.compassHeading = float(strResponce[23:30])
-        print("Yaw: %f Pitch: %f Roll: %f"%(self.getYaw(),self.getPitch(),self.getRoll()))
-        print("Yaw: %f Pitch: %f Roll: %f"%(self.yOff,self.pOff,self.rOff))
-        print("Yaw: %f Pitch: %f Roll: %f"%(self.getRawYaw(),self.getRawPitch(),self.getRawRoll()))
-        print()
+        #print("Yaw: %f Pitch: %f Roll: %f"%(self.getYaw(),self.getPitch(),self.getRoll()))
+        #print("Yaw: %f Pitch: %f Roll: %f"%(self.yOff,self.pOff,self.rOff))
+        #print("Yaw: %f Pitch: %f Roll: %f"%(self.getRawYaw(),self.getRawPitch(),self.getRawRoll()))
+        #print()
 
     def decodeQuaternionResponse( self, buffer, length ):
         pass

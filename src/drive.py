@@ -13,7 +13,7 @@ import wpilib
 __all__ = [ "Drive" ]
 
 
-class Drive( ):
+class Drive:
     PI_DIV_4 = math.pi / 4.0
 
     class MotorPosition( Enum ):
