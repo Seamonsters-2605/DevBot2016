@@ -26,6 +26,10 @@ class Vector:
         y = self.getY() + vector.self.getY()
         return Vector(XY=[x,y])
 
+    def setMagDir(self, Mag, Dir , Degrees = False):
+        self.setDirection(Dir, Degrees)
+        self.setMagnitude(Mag)
+
     def setDirection(self,angle,Degrees = False):
         if Degrees:
             self.direction = math.radians(angle)
@@ -56,3 +60,5 @@ class Vector:
         y = vector1.getX() + vector2.getY()
         return Vector(XY=[x,y])
 
+    def getType(self):
+        return "Vector"
