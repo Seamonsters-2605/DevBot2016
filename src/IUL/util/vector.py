@@ -12,12 +12,16 @@ class Vector:
                 self.direction = math.radians(MagDir[1])
             else:
                 self.direction = MagDir[1]
+
         elif XY != None:
             self.magnitude,self.direction = self.MDFromXY(XY[0],XY[1])
 
     def MDFromXY(self,x,y):
         magnitude = math.sqrt(  x**2 + y**2 )
         direction = math.atan2(y,x)
+
+        if direction < 0:
+            2*math.pi - direction
 
         return magnitude,direction
 
@@ -53,12 +57,6 @@ class Vector:
 
     def getDirDegrees(self):
         return math.degrees(self.direction)
-
-    @staticmethod
-    def add(vector1 , vector2):
-        x =vector1.getX() + vector2.getX()
-        y = vector1.getX() + vector2.getY()
-        return Vector(XY=[x,y])
 
     def getType(self):
         return "Vector"

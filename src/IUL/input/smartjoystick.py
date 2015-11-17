@@ -38,5 +38,5 @@ class SmartJoystick( wpilib.Joystick ):
             return False
         return True
 
-    def getMagnitudeVector(self):
-        return Vector(XY=[self.getX(),self.getY()])
+    def getVector(self):
+        return Vector(XY=[self.getX(),-self.getY()])
