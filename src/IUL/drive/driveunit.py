@@ -104,7 +104,7 @@ class DriveUnit:
     def clacShortestToAngleSet(self, angle):
         currentA = self.getCurrentAngle()
         angle = -(pi - abs((currentA - angle) - pi))
-        return angle
+        return angle + currentA
 
 
 
