@@ -102,6 +102,7 @@ class DriveUnit:
         self.angleMotor.set(self.getClicksFromAngle(short))
 
     def clacShortestToAngleSet(self, angle):
+        #nonworking
         currentA = self.getCurrentAngle()
         angle = -(pi - abs((currentA - angle) - pi))
         return angle + currentA
