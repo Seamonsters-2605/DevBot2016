@@ -22,6 +22,7 @@ class MyRobot( wpilib.IterativeRobot ):
 
         self.Drive = DriveUnit(11,2, AngleConfig=self.PositionConfig, magTalon= True)
         self.Drive.setEncoderClicksRev(400000)
+
         # Sticks
         self.RightStick = SmartJoystick( 1, axisDeadband=0.08 )
 
@@ -36,9 +37,12 @@ class MyRobot( wpilib.IterativeRobot ):
 
     def teleopInit( self ):
         self.Drive.enable()
+        self.Drive.zeroAngleTo90()
         print( "Enabled" )
 
     def teleopPeriodic( self ):
+        if self.RightStick.getBolButton(3):
+            self.Drive.zeroAngleTo90()
         vector = self.RightStick.getVector()
         self.Drive.setVector(vector)
 
