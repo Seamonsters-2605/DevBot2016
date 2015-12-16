@@ -39,13 +39,9 @@ class MyRobot( wpilib.IterativeRobot ):
         print( "Enabled" )
 
     def teleopPeriodic( self ):
-        vector = self.RightStick.getVector()
+        vector = self.RightStick.getVector(compass= True)
         self.Drive.setVector(vector)
-
-        #print("Angle: %f Mag: %f"%(vector.getDirection(),vector.getMagnitude()))
         self.Drive.pushTransform()
-
-
 
     def testInit( self ):
         pass

@@ -3,11 +3,13 @@ import wpilib
 from ..util.vector import Vector
 import copy
 from math import pi
-
+HALF_PI = pi/2.0
+TWO_PI = pi*2
 class DriveUnit:
-    def __init__(self, angleMotor , magMotor , AngleConfig = None , MagnitudeConfig = None  , nav = None , angleTalon = False , magTalon = False , maxV = 1023):
+    def __init__(self, angleMotor , magMotor , AngleConfig = None , MagnitudeConfig = None , angleTalon = False , magTalon = False , maxV = 1023):
         self.AngUseOpenLoop = False
         self.MagUseOpenLoop = False
+
         if hasattr(angleMotor, "set"):
             self.angleMotor = angleMotor
             if not hasattr(self.angleMotor, "getDescription"):
@@ -40,9 +42,6 @@ class DriveUnit:
 
         self.setPointVector = Vector()
 
-        self.nav = nav
-        self.enabled = False
-
         self.maxV = maxV
         self.encClicksRev = 0
         self.clicksPerRadian = 0
@@ -70,16 +69,19 @@ class DriveUnit:
     def disable(self):
         pass
 
-    def zeroAngle(self):
-        pass
+    def calibrateAngle(self, useSensor = True, sensorAngle = 0.0 ):
+        if useSensor:
+            pass
+        else:
+            self.angleMotor.setPosition(0)
 
-    def setAngle(self, angle):
-        self.setPointVector.setDirection(angle)
+    def setMagDir(self, magnitude = None , angle = None , Degrees = False):
+        if magnitude == None:
+            magnitude = self.getMagnitudeSetpoint()
 
-    def setMagnitude(self, magnitude):
-        self.setPointVector.setMagnitude(magnitude)
+        if angle == None:
+            angle = self.getAngleSetpoint()
 
-    def setMagDir(self, magnitude , angle , Degrees = False):
         self.setPointVector.setMagDir(magnitude , angle , Degrees)
 
     def setVector(self, vector):
@@ -87,40 +89,53 @@ class DriveUnit:
             raise ValueError("You didn't pass the correct data type")
         self.setPointVector = vector
 
-    def getAngle(self):
+    def getAngleSetpoint(self):
         return self.setPointVector.getDirection()
 
-    def getMagnitude(self):
+    def getMagnitudeSetpoint(self):
         return  self.setPointVector.getMagnitude()
 
     def pushTransform(self):
         if self.MagUseOpenLoop:
-            self.magMotor.set(self.getMagnitude())
+            self.magMotor.set(self.getMagnitudeSetpoint())
         else:
-            self.magMotor.set(self.getMagnitude() * self.maxV)
-        short = self.clacShortestToAngleSet(self.getAngle())
-        self.angleMotor.set(self.getClicksFromAngle(short))
+            self.magMotor.set(self.getMagnitudeSetpoint() * self.maxV)
 
-    def clacShortestToAngleSet(self, angle):
-        #nonworking
+        self.setAngleMotor(self.getAngleSetpoint())
+
+    def calculateShift(self,angleA,angleB,inClicks = True):
+        angleA = self.normilizeTwoPi(angleA)
+        angleB = self.normilizeTwoPi(angleB)
+        short = min(abs(abs(angleB - angleA) - TWO_PI), abs(angleB - angleA))
+        shift = None
+        if self.normilizeTwoPi(angleA + short) == angleB:
+            shift = short
+        elif self.normilizeTwoPi(angleA - short) == angleB:
+            shift = short * -1
+        else:
+            shift = 9090
+            raise ValueError("Something went wrong with the angle shift calc: short: %f shift: %f"%(short, shift))
+        if inClicks:
+            return self.getClicksFromAngle(shift)
+        else:
+            return shift
+
+    def setAngleMotor(self, setPoint):
         currentA = self.getCurrentAngle()
-        angle = -(pi - abs((currentA - angle) - pi))
-        return angle + currentA
-
-
+        shift = self.calculateShift(currentA , setPoint)
+        self.angleMotor.set(self.angleMotor.getSensorPosition() + shift)
 
     def getClicksFromAngle(self, angle):
         return angle * (self.clicksPerRadian)
 
-    def getCurrentAngle(self, Absolute = False):
+    def getCurrentAngle(self):
+        """Returns a radian measure constrained on 0 to 2pi"""
+        if self.AngUseOpenLoop:
+            print("Cannot calculate angle as this is not a CANTalon")
+            return 0
         currentClicks = self.angleMotor.getSensorPosition()
         angle = currentClicks / self.clicksPerRadian
-        if Absolute:
-            return angle
-
-        rAngle = angle % (2*pi)
-        return rAngle
-
+        return self.normilizeTwoPi(angle)
 
     def getType(self):
         return "DriveUnit"
@@ -136,4 +151,11 @@ class DriveUnit:
 
     def setEncoderClicksRev(self, clicksRev):
         self.encClicksRev = clicksRev
-        self.clicksPerRadian = clicksRev / (2*pi)
+        self.clicksPerRadian = clicksRev / TWO_PI
+
+    def normilizeTwoPi(self, angle ):
+        """Takes an radian measure and constrains it to 0 to two pi."""
+        angle = angle % (TWO_PI)
+        if angle < 0:
+            TWO_PI - abs(angle)
+        return angle

@@ -2,7 +2,7 @@ __author__ = 'Ian'
 import math
 
 class Vector:
-    def __init__(self,MagDir = None, XY = None, Degrees = False):
+    def __init__(self,MagDir = None, XY = None, Degrees = False, Compass = False):
         self.magnitude = 0.0
         self.direction = 0.0
 
@@ -15,6 +15,9 @@ class Vector:
 
         elif XY != None:
             self.magnitude,self.direction = self.MDFromXY(XY[0],XY[1])
+
+        if Compass:
+            self.direction = self.direction - ( math.pi / 2.0 )
 
     def MDFromXY(self,x,y):
         magnitude = math.sqrt(  x**2 + y**2 )
