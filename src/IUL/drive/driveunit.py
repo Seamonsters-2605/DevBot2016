@@ -109,9 +109,9 @@ class DriveUnit:
         angleB = self.normilizeTwoPi(angleB)
         short = min(abs(abs(angleB - angleA) - TWO_PI), abs(angleB - angleA))
         shift = None
-        if self.normilizeTwoPi(angleA + short) == angleB:
+        if round(self.normilizeTwoPi(angleA + short),10) == round(angleB,10):
             shift = short
-        elif self.normilizeTwoPi(angleA - short) == angleB:
+        elif round(self.normilizeTwoPi(angleA - short),10) == round(angleB,10):
             shift = short * -1
         else:
             shift = 9090
