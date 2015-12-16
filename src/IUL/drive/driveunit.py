@@ -59,6 +59,7 @@ class DriveUnit:
                 self.MagnitudeConfig.configure(self.magMotor)
         except ValueError:
             self.MagUseOpenLoop = True
+        self.calibrateAngle()
 
         self.enabled = True
 

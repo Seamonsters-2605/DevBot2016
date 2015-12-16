@@ -39,7 +39,7 @@ class MyRobot( wpilib.IterativeRobot ):
         print( "Enabled" )
 
     def teleopPeriodic( self ):
-        vector = self.RightStick.getVector(compass= True)
+        vector = self.RightStick.getVector(compass= True, Yinv= True)
         self.Drive.setVector(vector)
         self.Drive.pushTransform()
 
