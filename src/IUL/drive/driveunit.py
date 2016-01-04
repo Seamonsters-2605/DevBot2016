@@ -5,6 +5,7 @@ import copy
 from math import pi
 HALF_PI = pi/2.0
 TWO_PI = pi*2
+
 class DriveUnit:
     def __init__(self, angleMotor , magMotor , AngleConfig = None , MagnitudeConfig = None , angleTalon = False , magTalon = False , maxV = 1023):
         self.AngUseOpenLoop = False
@@ -107,6 +108,7 @@ class DriveUnit:
     def calculateShift(self,angleA,angleB,inClicks = True):
         angleA = self.normilizeTwoPi(angleA)
         angleB = self.normilizeTwoPi(angleB)
+        
         short = min(abs(abs(angleB - angleA) - TWO_PI), abs(angleB - angleA))
         shift = None
         if self.normilizeTwoPi(angleA + short) == angleB:
@@ -154,7 +156,7 @@ class DriveUnit:
         self.encClicksRev = clicksRev
         self.clicksPerRadian = clicksRev / TWO_PI
 
-    def normilizeTwoPi(self, angle ):
+    def normilizeTwoPi(self, angle):
         """Takes an radian measure and constrains it to 0 to two pi."""
         angle = angle % (TWO_PI)
         if angle < 0:
