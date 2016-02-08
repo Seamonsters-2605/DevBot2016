@@ -2,7 +2,7 @@ __author__ = 'Ian'
 import math
 
 class Vector:
-    def __init__(self,MagDir = None, XY = None, Degrees = False):
+    def __init__(self,MagDir = None, XY = None, Degrees = False, Compass = False):
         self.magnitude = 0.0
         self.direction = 0.0
 
@@ -12,12 +12,19 @@ class Vector:
                 self.direction = math.radians(MagDir[1])
             else:
                 self.direction = MagDir[1]
+
         elif XY != None:
             self.magnitude,self.direction = self.MDFromXY(XY[0],XY[1])
+
+        if Compass:
+            self.direction = self.direction - ( math.pi / 2.0 )
 
     def MDFromXY(self,x,y):
         magnitude = math.sqrt(  x**2 + y**2 )
         direction = math.atan2(y,x)
+
+        if direction < 0:
+            2*math.pi - direction
 
         return magnitude,direction
 
@@ -25,6 +32,10 @@ class Vector:
         x = self.getX() + vector.self.getX()
         y = self.getY() + vector.self.getY()
         return Vector(XY=[x,y])
+
+    def setMagDir(self, Mag, Dir , Degrees = False):
+        self.setDirection(Dir, Degrees)
+        self.setMagnitude(Mag)
 
     def setDirection(self,angle,Degrees = False):
         if Degrees:
@@ -50,9 +61,5 @@ class Vector:
     def getDirDegrees(self):
         return math.degrees(self.direction)
 
-    @staticmethod
-    def add(vector1 , vector2):
-        x =vector1.getX() + vector2.getX()
-        y = vector1.getX() + vector2.getY()
-        return Vector(XY=[x,y])
-
+    def getType(self):
+        return "Vector"

@@ -17,6 +17,7 @@ class CANTalonConfig:
         self.closedLoopRamp = 0
         self.motorRamp = 0
         self.brake = False
+        self.encClickRev = None
 
     def setGlobalInversion( self, Sensor ):
         self.sensorInvertedGlobal = Sensor
@@ -52,10 +53,13 @@ class CANTalonConfig:
                 return False
         else:
             return False
+    def setEncoderClicksPerRev(self, encoderClicksPerRev):
+        self.encClickRev = encoderClicksPerRev
 
     def configure( self, CANTalon ):
         if not self.isCANTalon( CANTalon ):
             raise ValueError( "did not pass a object of type CANTalon" )
+
         CANTalon.changeControlMode( self.Mode )
 
         if self.feedbackType != None:
@@ -68,5 +72,6 @@ class CANTalonConfig:
         CANTalon.reverseSensor( self.sensorInvertedGlobal )
         CANTalon.enableBrakeMode( self.brake )
 
+        CANTalon.setPosition(0)
         CANTalon.set( 0 )
         CANTalon.enableControl( )
