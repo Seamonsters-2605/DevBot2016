@@ -31,7 +31,7 @@ class SmartJoystick( wpilib.Joystick ):
 
     def getBolButton( self, bNumber ):
         bNumber = int( bNumber )
-        if bNumber < 0 or bNumber > self.getButtonCount( ):
+        if bNumber < 0 or bNumber > self.getButtonCount( ) - 1:
             raise ValueError( "This is not a valid button" )
 
         if self.getRawButton( bNumber ) == 0:
